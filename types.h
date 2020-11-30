@@ -7,14 +7,6 @@
 #define TARGET '?'
 
 
-enum Keys {
-  CTRL_C = 3,
-  KEY_UP = 65,
-  KEY_DOWN = 66,
-  KEY_LEFT = 68,
-  KEY_RIGHT = 67,
-};
-
 typedef struct object {
 
   int x, y;
