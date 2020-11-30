@@ -161,8 +161,12 @@ int main() {
   close_keyboard();
   clear();
 
-  for(int i = 0; i < goals.lenght; i++) {
-    //printf("Goals::(%d, %d)\n", goals.list[i].x, goals.list[i].y);
+  if(boxes.list) free(boxes.list);
+  if(goals.list) free(goals.list);
+  if(gameState.currrentMap.field) {
+    for(int i = 0; i < gameState.currrentMap.height; i++) {
+      free(gameState.currrentMap.field[i]);
+    }
   }
 
   return 0;
