@@ -1,5 +1,5 @@
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#ifndef __TYPES_SOKOBAN_H__
+#define __TYPES_SOKOBAN_H__
 
 #define BOX    '#'
 #define WALL   '*'
@@ -46,4 +46,4 @@ typedef struct gameState {
   int level;
 } GameState;
 
-#endif // __TYPES_H__
+#endif // __TYPES_SOKOBAN_H__
