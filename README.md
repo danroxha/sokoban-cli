@@ -16,4 +16,5 @@ Atividade da disciplina de linguagem de programação I.
 
 ## Referência
 
-- WIKIPEDIA, *Sokoban*, Disponivel em: <<https://en.wikipedia.org/wiki/Sokoban>>. Acesso em 29 novembro de 2020.
+- WIKIPEDIA, ***Sokoban***. Disponível em: <<https://en.wikipedia.org/wiki/Sokoban>>. Acesso em 29 novembro de 2020.
+- SOKOBAN, ***Sokoban - Original e Extra***. Disponível em: <<https://sokoban.info/>>. Acesso em 30 novembro de 2020.
