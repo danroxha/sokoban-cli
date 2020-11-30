@@ -11,8 +11,8 @@ enum Keys {
   CTRL_C = 3,
   KEY_UP = 65,
   KEY_DOWN = 66,
-  KEY_LEFT = 67,
-  KEY_RIGHT = 68,
+  KEY_LEFT = 68,
+  KEY_RIGHT = 67,
 };
 
 typedef struct object {
