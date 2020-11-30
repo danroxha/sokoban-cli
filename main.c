@@ -11,7 +11,7 @@ void drawMap(GameState*);
 void drawBoxes(Boxes*);
 void drawObject(Object*);
 bool checkCollisionBetweenBoxes(Boxes*);
-bool checkPuzzleSolution(GameState*);
+void checkPuzzleSolution(GameState*);
 void handleBoxesOnTarget(Boxes*, Goals*);
 void configCharacter(Object*, GameState*);
 void configBoxes(Boxes*, GameState*);
@@ -145,8 +145,7 @@ int main() {
       }
 
       handleBoxesOnTarget(&boxes, &goals);
-      
-      gameState.gameOver = checkPuzzleSolution(&gameState);
+      checkPuzzleSolution(&gameState);
       
       clear();
       drawMap(&gameState);
@@ -230,15 +229,17 @@ bool checkCollisionBetweenBoxes(Boxes *boxes) {
   return false;
 }
 
-bool checkPuzzleSolution(GameState *gameState) {
+void checkPuzzleSolution(GameState *gameState) {
   
   int completePuzzle = 0;
+  
   for(int i = 0; i < gameState->boxes->lenght; i++) {
     if(gameState->boxes->list[i].enable)
       completePuzzle++;
   }
-  
-  return completePuzzle == gameState->boxes->lenght;
+
+  gameState->gameOver = completePuzzle == gameState->boxes->lenght;
+
 }
 
 void handleBoxesOnTarget(Boxes *boxes, Goals *goals) {
@@ -254,7 +255,6 @@ void handleBoxesOnTarget(Boxes *boxes, Goals *goals) {
     }
   }
 }
-
 
 void configCharacter(Object *character, GameState *gameState) {
   
