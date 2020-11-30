@@ -1,74 +1,52 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
 #include "keyboard.h"
 #include "screen.h"
-
-typedef struct object {
-
-  int x, y;
-  char body;
-
-} Object;
-
-typedef struct box {
-  int x, y;
-  char body;
-  bool enable;
-} Box;
-
-typedef struct 
-{
-  Box *list;
-  int lenght;
-} Boxs;
-
-typedef struct currentMap {
-  char**map;
-  int width;
-  int height;
-
-} CurrentMap;
-typedef struct gameState {
-  Boxs *boxs;
-  CurrentMap currrentMap;
-  Object *character;
-  bool gameOver;
-} GameState;
+#include "types.h"
 
 
-void draw(GameState);
+void drawMap(GameState*);
+void drawBoxes(Boxes*);
+void drawObject(Object*);
+bool checkCollisionBetweenBoxes(Boxes*);
+bool checkPuzzleSolution(GameState*);
+void handleBoxesOnTarget(Boxes*, Goals*);
+void configCharacter(Object*, GameState*);
+void configBoxes(Boxes*, GameState*);
+void configGoals(Goals*, GameState*);
+void configGameState(GameState*);
+
 
 int main() {
   
-  #define BOX  '#'
-  #define WALL '*'
-  #define DOLL '@'
-  #define GOAL '?'
+  srand(time(0));
+
   #define SIZE 11
   
-  Boxs boxs;
+  Boxes boxes;
+  Goals goals;
   GameState gameState;
   Object character;
+  
 
-  gameState.gameOver = false;
+
   gameState.currrentMap.width = SIZE;
   gameState.currrentMap.height = SIZE;
-  gameState.boxs = &boxs;
+  gameState.boxes = &boxes;
   gameState.character = &character;
 
-  boxs.list   = NULL;
-  boxs.lenght = 0;
-  bool gameOver = false;
-  
+ 
 
   char map[SIZE][SIZE] = {
       "          \n",
       "  Level 1 \n",
-      "   ***    \n",
-      "   *?*    \n",
-      "   *#*****\n",
+      "   ****   \n",
+      "   *  *   \n",
+      "   *? ****\n",
       " ***# # ?*\n",
-      " *? #@****\n",
+      " *?# @****\n",
       " ****#*   \n",
       "    *?*   \n",
       "    ***   \n",
@@ -79,71 +57,30 @@ int main() {
   init_keyboard();
   nocursor();
 
-  enum Keys {
-    CTRL_C = 3,
-    KEY_UP = 65,
-    KEY_DOWN = 66,
-    KEY_LEFT = 67,
-    KEY_RIGHT = 68,
-  };
-
-
-  for (int i = 0; i < SIZE; i++) 
-    for (int j = 0; j < SIZE; j++) {
-      if (map[i][j] == DOLL)
-      {
-        character.x = j + 1;
-        character.y = i + 1;
-        map[i][j] = ' ';
-        break;
-      }
-    }
-
-  for (int i = 0; i < SIZE; i++) 
-    for (int j = 0; j < SIZE; j++) {
-      if(map[i][j] == BOX) {
-        boxs.lenght++;
-      }
-    }
-
-  boxs.list = (Box*) calloc(boxs.lenght, sizeof(Box));
-
-
-  for(int i = 0; i < boxs.lenght; i++) {
-    boxs.list[i].body = BOX;
-    boxs.list[i].enable = false;
-  }
-
-  int index = 0;
-  for (int i = 0; i < SIZE; i++) 
-    for (int j = 0; j < SIZE; j++) {
-      if(map[i][j] == BOX) {
-        boxs.list[index].x = j + 1;
-        boxs.list[index].y = i + 1;
-        index++;
-        map[i][j] = ' ';
-      }
-    }
    // COPY MAP START
-  gameState.currrentMap.map = (char**) calloc(SIZE, sizeof(char*));
+  gameState.currrentMap.field = (char**) calloc(SIZE, sizeof(char*));
   
   for(int i = 0; i < SIZE; i++){
-    gameState.currrentMap.map[i] = (char*) calloc(SIZE, sizeof(char));
+    gameState.currrentMap.field[i] = (char*) calloc(SIZE, sizeof(char));
   }
   
   for (int i = 0; i < SIZE; i++) 
     for (int j = 0; j < SIZE; j++) {
-      gameState.currrentMap.map[i][j] = map[i][j];
+      gameState.currrentMap.field[i][j] = map[i][j];
     }
   // COPY MAP END  
 
-  character.body = DOLL;
+  configGameState(&gameState);
+  configCharacter(&character, &gameState);
+  configBoxes(&boxes, &gameState);
+  configGoals(&goals, &gameState);
 
 
   clear();
 
-  draw(gameState);
+  drawMap(&gameState);
   gotoxy(character.x, character.y);
+
 
   do {
 
@@ -167,41 +104,36 @@ int main() {
       else if (key == KEY_RIGHT && !collision_wall_right)
         character.x--;
 
-      collision_wall_right = map[character.y - 1][character.x - 2] == WALL;
-      collision_wall_top = map[character.y - 2][character.x - 1]   == WALL;
-      collision_wall_bottom = map[character.y][character.x - 1]    == WALL;
-      collision_wall_left = map[character.y - 1][character.x]      == WALL;
 
-      for(int i = 0; i < boxs.lenght; i++) {
+      collision_wall_right  = map[character.y - 1][character.x - 2] == WALL;
+      collision_wall_top    = map[character.y - 2][character.x - 1] == WALL;
+      collision_wall_bottom = map[character.y][character.x - 1]     == WALL;
+      collision_wall_left   = map[character.y - 1][character.x]     == WALL;
+
+
+      for(int i = 0; i < boxes.lenght; i++) {
         
-        bool collision_box = boxs.list[i].x == character.x && boxs.list[i].y == character.y;
+        bool collision_box = boxes.list[i].x == character.x && boxes.list[i].y == character.y;
 
         if (key == KEY_UP && collision_box && !collision_wall_top) {
-          Box bk = boxs.list[i];
-          boxs.list[i].y--;
-          
-          for(int j = 0; j < boxs.lenght; j++)
-            if(boxs.list[i].x == boxs.list[j].x && boxs.list[i].y == boxs.list[j].y) {
-              boxs.list[i] = bk;
-              
-            }
+          boxes.list[i].y--;
         }
         else if (key == KEY_DOWN && collision_box && !collision_wall_bottom) {
-          boxs.list[i].y++;
+          boxes.list[i].y++;
         }
         else if (key == KEY_LEFT && collision_box && !collision_wall_left) {
-          boxs.list[i].x++;
+          boxes.list[i].x++;
         }
         else if (key == KEY_RIGHT && collision_box && !collision_wall_right) {
-          boxs.list[i].x--;
+          boxes.list[i].x--;
         }
-
+        
 
         // No run throungh on Box;
-        if (key == KEY_UP && collision_box && collision_wall_top ) {
+        if (key == KEY_UP && collision_box && collision_wall_top) {
           character.y++;
         }
-        else if (key == KEY_DOWN && collision_box && collision_wall_bottom ) {
+        else if (key == KEY_DOWN && collision_box && collision_wall_bottom) {
           character.y--;
         }
         else if (key == KEY_LEFT && collision_box && collision_wall_left) {
@@ -212,89 +144,185 @@ int main() {
         }
       }
 
-      for (int i = 0; i < SIZE; i++)
-        for (int j = 0; j < SIZE; j++) {
-          if(map[i][j] == GOAL) {
-            
-
-            for(int z = 0; z < boxs.lenght; z++) {
-              if(boxs.list[z].y == i + 1 && boxs.list[z].x == j + 1) {
-                boxs.list[z].enable = true;
-              }
-            }
-          }
-        }
+      handleBoxesOnTarget(&boxes, &goals);
       
-      int complete = 0;
-      for(int i = 0; i < boxs.lenght; i++ ) {
-        if(boxs.list[i].enable) {
-          complete++;
-        }
-      }
-
-      if(complete == boxs.lenght){
-        gameState.gameOver = true;
-      }
-
+      gameState.gameOver = checkPuzzleSolution(&gameState);
+      
       clear();
-
-
-      // DRAW MAP
-      draw(gameState);
-
+      drawMap(&gameState);
       
     }
 
-    printf("\x1b[33;1m");
-    printf("%c", character.body);
-    gotoxy(character.x, character.y);
-    // DRAW BOX
+    drawObject(&character);
+    drawBoxes(&boxes);
 
-    for(int i = 0; i < boxs.lenght; i++) {
-      gotoxy(boxs.list[i].x, boxs.list[i].y);
-      if(boxs.list[i].enable) {
-        printf("\x1b[37;42;1m");
-      }
-      else {
-        printf("\x1b[41;1m");
-      }
-      printf("%c", boxs.list[i].body);
-      printf("\x1b[0m");
-      
-    }
-
-    gotoxy(character.x, character.y);
 
   } while (!gameState.gameOver);
 
   close_keyboard();
   clear();
 
+  for(int i = 0; i < goals.lenght; i++) {
+    //printf("Goals::(%d, %d)\n", goals.list[i].x, goals.list[i].y);
+  }
+
   return 0;
 }
 
+void drawBoxes(Boxes *boxes) {
+  for(int i = 0; i < boxes->lenght; i++) {
+    gotoxy(boxes->list[i].x, boxes->list[i].y);
+    if(boxes->list[i].enable) {
+      printf("\x1b[37;42;1m");
+    }
+    else {
+      printf("\x1b[41;1m");
+    }
+    printf("%c", boxes->list[i].body);
+    printf("\x1b[0m");
+  }
+}
 
-void draw(GameState gameState) {
+void drawMap(GameState *gameState) {
 
-  for(int i = 0; i < gameState.currrentMap.height; i++)
-    for(int j = 0; j < gameState.currrentMap.width; j++) {
+  for(int i = 0; i < gameState->currrentMap.height; i++)
+    for(int j = 0; j < gameState->currrentMap.width; j++) {
    
-      if (gameState.currrentMap.map[i][j] == GOAL) {
+      if (gameState->currrentMap.field[i][j] == TARGET) {
         printf("\x1b[32;1m");
-        printf("%c", gameState.currrentMap.map[i][j]);
+        printf("%c", gameState->currrentMap.field[i][j]);
         printf("\x1b[0m");
       }
       // DRAW WALL
-      else if (gameState.currrentMap.map[i][j] == WALL) {
+      else if (gameState->currrentMap.field[i][j] == WALL) {
         printf("\x1b[46m");
-        printf("%c", gameState.currrentMap.map[i][j]);
+        printf("%c", gameState->currrentMap.field[i][j]);
         printf("\x1b[0m");
       }
       // DRAW ANY
       else {
-        printf("%c", gameState.currrentMap.map[i][j]);
+        printf("%c", gameState->currrentMap.field[i][j]);
       }
     }
 
-    gotoxy(gameState.character->x, gameState.character->y);
+    gotoxy(gameState->character->x, gameState->character->y);
+}
+
+void drawObject(Object *object) {
+  
+  gotoxy(object->x, object->y);
+  printf("\x1b[33;1m");
+  printf("%c", object->body);
+
+}
+
+bool checkCollisionBetweenBoxes(Boxes *boxes) {
+  
+  for(int i = 0; i < boxes->lenght; i++) {
+    for(int j = 0; j < boxes->lenght; j++) {
+      if(boxes->list[i].x && boxes->list[j].x && boxes->list[i].y 
+      && boxes->list[j].y && boxes->list[i].id != boxes->list[j].id) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+bool checkPuzzleSolution(GameState *gameState) {
+  
+  int completePuzzle = 0;
+  for(int i = 0; i < gameState->boxes->lenght; i++) {
+    if(gameState->boxes->list[i].enable)
+      completePuzzle++;
+  }
+  
+  return completePuzzle == gameState->boxes->lenght;
+}
+
+void handleBoxesOnTarget(Boxes *boxes, Goals *goals) {
+
+  for(int i = 0; i < boxes->lenght; i++) {
+    
+    boxes->list[i].enable = false;
+
+    for(int j = 0; j < goals->lenght; j++) {
+      if(boxes->list[i].x == goals->list[j].x && boxes->list[i].y == goals->list[j].y) {
+        boxes->list[i].enable = true;
+      }
+    }
+  }
+}
+
+
+void configCharacter(Object *character, GameState *gameState) {
+  
+  character->body = DOLL;
+
+  for (int y = 0; y < gameState->currrentMap.height; y++) 
+    for (int x = 0; x < gameState->currrentMap.width; x++) {
+      if (gameState->currrentMap.field[y][x] == DOLL) {
+        character->x = x + 1;
+        character->y = y + 1;
+        gameState->currrentMap.field[y][x] = ' ';
+        break;
+      }
+    }
+}
+
+void configBoxes(Boxes *boxes, GameState *gameState) {
+  
+  boxes->list   = NULL;
+  boxes->lenght = 0;
+
+ for (int y = 0; y < gameState->currrentMap.height; y++) 
+    for (int x = 0; x < gameState->currrentMap.width; x++) {
+      if(gameState->currrentMap.field[y][x] == BOX) {
+        boxes->lenght++;
+      }
+    }
+
+  boxes->list = (Box*) calloc(boxes->lenght, sizeof(Box));
+
+  for(int i = 0; i < boxes->lenght; i++) {
+    boxes->list[i].body = BOX;
+    boxes->list[i].enable = false;
+    boxes->list[i].id = rand();
+  }
+
+  int index = 0;
+
+  for (int y = 0; y < gameState->currrentMap.height; y++) 
+    for (int x = 0; x < gameState->currrentMap.width; x++) {
+      if(gameState->currrentMap.field[y][x] == BOX) {
+        boxes->list[index].x = x + 1;
+        boxes->list[index].y = y + 1;
+        gameState->currrentMap.field[y][x] = ' ';
+        index++;
+      }
+    }
+}
+
+void configGoals(Goals *goals, GameState *gameState) {
+  
+  goals->lenght = 0;
+  if(goals->list)
+    free(goals->list);
+
+  for(int y = 0; y < gameState->currrentMap.height; y++) {
+    for(int x = 0; x < gameState->currrentMap.width; x++) {
+      if(gameState->currrentMap.field[y][x] == TARGET) {
+        goals->lenght++;
+        goals->list = (Object*) realloc(goals->list, goals->lenght * sizeof(Object));
+        goals->list[goals->lenght - 1].body = TARGET;
+        goals->list[goals->lenght - 1].x = x + 1;
+        goals->list[goals->lenght - 1].y = y + 1;
+      }
+    }
+  }
+}
+
+void configGameState(GameState *gameState) {
+  gameState->gameOver = false;
 }
