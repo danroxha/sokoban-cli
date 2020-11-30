@@ -82,4 +82,5 @@ void configGoals(Goals *goals, GameState *gameState) {
 void configGameState(GameState *gameState) {
   gameState->gameOver = false;
 }
+
 #endif // __SETTING_SOKOBAN_H__

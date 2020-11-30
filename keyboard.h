@@ -13,11 +13,13 @@ static struct termios initial_settings, new_settings;
 static int peek_character = -1;
 
 enum Keys {
-  CTRL_C    = 3,
-  KEY_UP    = 65,
-  KEY_DOWN  = 66,
-  KEY_LEFT  = 68,
-  KEY_RIGHT = 67,
+  CTRL_C          = 3,
+  KEY_ARROW_UP    = 65,
+  KEY_ARROW_DOWN  = 66,
+  KEY_ARROW_LEFT  = 68,
+  KEY_ARROW_RIGHT = 67,
+  KEY_R_L         = 114, // KEY R LOWERCASE
+  KEY_R_U         = 82,  // KEY R UPPERCASE
 };
 
 void init_keyboard()
