@@ -40,18 +40,32 @@ int main() {
  
 
   char map[SIZE][SIZE] = {
-      "          \n",
-      "  Level 1 \n",
-      "   ****   \n",
-      "   *  *   \n",
-      "   *? ****\n",
-      " ***# # ?*\n",
-      " *?# @****\n",
-      " ****#*   \n",
-      "    *?*   \n",
-      "    ***   \n",
-      "          \n",
+  "          \n",
+  "  Level 1 \n",
+  "   ****   \n",
+  "   *?*    \n",
+  "   * *****\n",
+  " ***# # ?*\n",
+  " *?# @****\n",
+  " ****#*   \n",
+  "    *?*   \n",
+  "    ***   \n",
+  "          \n",
   };
+
+  // char map[SIZE][SIZE] = {
+      // "          \n",
+      // "  Level 1 \n",
+      // "          \n",
+      // "          \n",
+      // "   ##     \n",
+      // "          \n",
+      // "   @ #    \n",
+      // "     #    \n",
+      // "          \n",
+      // "          \n",
+      // "          \n",
+  // };
   
 
   init_keyboard();
@@ -81,12 +95,12 @@ int main() {
   drawMap(&gameState);
   gotoxy(character.x, character.y);
 
-
+  int key;
   do {
 
     if (kbhit()) {
 
-      int key = readch();
+      key = readch();
       if (key == CTRL_C)
         break;
 
@@ -99,33 +113,66 @@ int main() {
         character.y--;
       else if (key == KEY_DOWN && !collision_wall_bottom)
         character.y++;
-      else if (key == KEY_LEFT && !collision_wall_left)
+      else if (key == KEY_RIGHT && !collision_wall_left)
         character.x++;
-      else if (key == KEY_RIGHT && !collision_wall_right)
+      else if (key == KEY_LEFT && !collision_wall_right)
         character.x--;
 
 
-      collision_wall_right  = map[character.y - 1][character.x - 2] == WALL;
-      collision_wall_top    = map[character.y - 2][character.x - 1] == WALL;
-      collision_wall_bottom = map[character.y][character.x - 1]     == WALL;
-      collision_wall_left   = map[character.y - 1][character.x]     == WALL;
 
 
       for(int i = 0; i < boxes.lenght; i++) {
         
+        collision_wall_top    = map[boxes.list[i].y - 2][boxes.list[i].x - 1] == WALL;
+        collision_wall_bottom = map[boxes.list[i].y][boxes.list[i].x - 1]     == WALL;
+        collision_wall_left   = map[boxes.list[i].y - 1][boxes.list[i].x]     == WALL;
+        collision_wall_right  = map[boxes.list[i].y - 1][boxes.list[i].x - 2] == WALL;
+        
+
         bool collision_box = boxes.list[i].x == character.x && boxes.list[i].y == character.y;
 
         if (key == KEY_UP && collision_box && !collision_wall_top) {
+          
           boxes.list[i].y--;
+          for(int j = 0; j < boxes.lenght; j++) {
+            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
+            && boxes.list[i].y == boxes.list[j].y) {
+              boxes.list[i].y++;
+              character.y++;
+            }
+          }
+          
         }
         else if (key == KEY_DOWN && collision_box && !collision_wall_bottom) {
           boxes.list[i].y++;
+          
+          for(int j = 0; j < boxes.lenght; j++) {
+            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
+            && boxes.list[i].y == boxes.list[j].y) {
+              boxes.list[i].y--;
+              character.y--;
+            }
+          }
         }
-        else if (key == KEY_LEFT && collision_box && !collision_wall_left) {
+        else if (key == KEY_RIGHT && collision_box && !collision_wall_left) {
           boxes.list[i].x++;
+          for(int j = 0; j < boxes.lenght; j++) {
+            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
+            && boxes.list[i].y == boxes.list[j].y) {
+              boxes.list[i].x--;
+              character.x--;
+            }
+          }
         }
-        else if (key == KEY_RIGHT && collision_box && !collision_wall_right) {
+        else if (key == KEY_LEFT && collision_box && !collision_wall_right) {
           boxes.list[i].x--;
+          for(int j = 0; j < boxes.lenght; j++) {
+            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
+            && boxes.list[i].y == boxes.list[j].y) {
+              boxes.list[i].x++;
+              character.x++;
+            }
+          }
         }
         
 
@@ -154,7 +201,26 @@ int main() {
 
     drawObject(&character);
     drawBoxes(&boxes);
+    printf("\n\n");
+    switch (key){
+      case KEY_UP: {
+        printf("\nTecla: ↑ : %d", key);
+        break;
+      }
+      case KEY_DOWN: {
+        printf("\nTecla: ↓ : %d", key);
+        break;
+      }
+      case KEY_RIGHT: {
+        printf("\nTecla: → : %d", key);
+        break;
+      }
+      case KEY_LEFT: {
+        printf("\nTecla: ← : %d", key);
+        break;
+      }
 
+    }
 
   } while (!gameState.gameOver);
 
