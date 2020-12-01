@@ -193,30 +193,31 @@ int main() {
 
     drawObject(&character);
     drawBoxes(&boxes);
-    printf("\n\n");
-    switch (key){
-      default: {
-        printf("\nTecla:: %d", key);
-        break;
-      }
-      case KEY_ARROW_UP: {
-        printf("\nTecla: ↑ : %d", key);
-        break;
-      }
-      case KEY_ARROW_DOWN: {
-        printf("\nTecla: ↓ : %d", key);
-        break;
-      }
-      case KEY_ARROW_RIGHT: {
-        printf("\nTecla: → : %d", key);
-        break;
-      }
-      case KEY_ARROW_LEFT: {
-        printf("\nTecla: ← : %d", key);
-        break;
-      }
-
-    }
+  
+    
+    //switch (key){
+    //  default: {
+    //    printf("\nTecla:: %d", key);
+    //    break;
+    //  }
+    //  case KEY_ARROW_UP: {
+    //    printf("\nTecla: ↑ : %d", key);
+    //    break;
+    //  }
+    //  case KEY_ARROW_DOWN: {
+    //    printf("\nTecla: ↓ : %d", key);
+    //    break;
+    //  }
+    //  case KEY_ARROW_RIGHT: {
+    //    printf("\nTecla: → : %d", key);
+    //    break;
+    //  }
+    //  case KEY_ARROW_LEFT: {
+    //    printf("\nTecla: ← : %d", key);
+    //    break;
+    //  }
+    //
+    //}
 
   } while (!gameState.gameOver);
 
