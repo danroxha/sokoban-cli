@@ -86,8 +86,10 @@ int main() {
   gotoxy(character.x, character.y);
 
   int key;
+  int timeStart = time(0);
   do {
-
+    gotoxy(0, 0);
+    printf("Time: %lds", time(0) - timeStart);
     if (kbhit()) {
 
       key = readch();
