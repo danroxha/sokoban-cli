@@ -9,8 +9,7 @@
 #include "screen.h"
 #include "types.h"
 #include "draw.h"
-#include "setting.h"
-#include "logic.h"
+#include "util.h"
 
 
 #endif // __SOKOBAN_SOKOBAN_H__

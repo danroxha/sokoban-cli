@@ -7,6 +7,19 @@
 #define TARGET '?'
 
 
+typedef struct error{
+  char *message;
+  char *type;
+} Error;
+
+
+typedef struct errors
+{
+  Error *list;
+  bool hasError;
+  int size;
+} Errors;
+
 typedef struct object {
 
   int x, y;
@@ -35,6 +48,7 @@ typedef struct map {
   char **field;
   int width;
   int height;
+  Errors errors;
 
 } Map;
 
@@ -45,5 +59,19 @@ typedef struct gameState {
   bool gameOver;
   int level;
 } GameState;
+
+
+typedef struct Levels {
+  char **filenames;
+  char **paths;
+  int total;
+
+} Levels;
+
+
+typedef struct world {
+  Levels *levels;
+  int total;
+} World;
 
 #endif // __TYPES_SOKOBAN_H__

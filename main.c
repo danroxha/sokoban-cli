@@ -1,9 +1,18 @@
-#include "sokoban.h"
+#include "./lib/sokoban.h"
+#include "setting.h"
+#include "logic.h"
+
+#define __DEBUGGER_BUILD_MAP_TEST__
 
 
 int main() {
   
   srand(time(0));
+  
+  #ifdef __DEBUGGER_BUILD_MAP_TEST__
+    hasIssueInMapsFile("world/");
+    return 0;
+  #endif
 
   #define SIZE 21
   

@@ -1,20 +1,18 @@
 #ifndef __SCREEN_H__
 #define __SCREEN_H__
 
+#include <stdio.h>
 
-void nocursor()
-{
+void nocursor() {
   printf("\x1b[?25l");
 }
 
 
-void gotoxy(unsigned int x, unsigned int y)
-{
+void gotoxy(unsigned int x, unsigned int y) {
   printf("\x1b[%d;%df", y, x);
 }
 
-void clear()
-{
+void clear() {
   printf("\x1b[H\x1b[J"); 
 }
 

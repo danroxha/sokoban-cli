@@ -2,7 +2,7 @@
 #define __SETTING_SOKOBAN_H__
 
 #include <stdlib.h>
-#include "types.h"
+#include "lib/types.h"
 
 
 void configCharacter(Object*, GameState*);
