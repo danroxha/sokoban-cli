@@ -64,9 +64,9 @@ void configGoals(Goals *goals, GameState *gameState) {
   
   goals->lenght = 0;
   goals->list = NULL;
-  // goals->list = (Object*) realloc(goals->list, 0 * sizeof(Object));
-  //if(goals->list != NULL)
-  //  free(goals->list);
+  if(goals->list != NULL)
+    free(goals->list);
+  
   for(int y = 0; y < gameState->currrentMap.height; y++) {
     for(int x = 0; x < gameState->currrentMap.width; x++) {
       if(gameState->currrentMap.field[y][x] == TARGET) {
