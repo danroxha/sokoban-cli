@@ -149,6 +149,25 @@ void destroy(void *memory, const char* type) {
   	if(world->levels != NULL)
   		free(world->levels);
   }
+  // FREE BOXES
+  else if(!strcmp(type, "Boxes")) {
+    Boxes *boxes = (Boxes*) memory;
+    
+    if(boxes->list != NULL) free(boxes->list);
+  
+  }
+  // FREE GOALS
+  else if(!strcmp(type, "Goals")) {
+    Goals *goals = (Goals*) memory;
+
+    if(goals->list != NULL) free(goals->list);
+  }
+  else if(!strcmp(type, "GameState")) {
+    GameState *gameState = (GameState*) memory;
+
+    if(gameState->currrentMap.field != NULL)
+      destroy(&gameState->currrentMap.field, "Map");
+  }
   else {
     fprintf(stderr, "\033[31;1mFILE: %s \n \033[0;1m", __FILE__);
     fprintf(stderr, "\033[31;1mError ↴\n  'destroy': Função 'destroy' recebeu tipo não registrado\n\033[0;1m");

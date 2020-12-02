@@ -73,45 +73,16 @@ int main() {
 
     drawObject(&character);
     drawBoxes(&boxes);
-  
-    
-    //switch (key){
-    //  default: {
-    //    printf("\nTecla:: %d", key);
-    //    break;
-    //  }
-    //  case KEY_ARROW_UP: {
-    //    printf("\nTecla: ↑ : %d", key);
-    //    break;
-    //  }
-    //  case KEY_ARROW_DOWN: {
-    //    printf("\nTecla: ↓ : %d", key);
-    //    break;
-    //  }
-    //  case KEY_ARROW_RIGHT: {
-    //    printf("\nTecla: → : %d", key);
-    //    break;
-    //  }
-    //  case KEY_ARROW_LEFT: {
-    //    printf("\nTecla: ← : %d", key);
-    //    break;
-    //  }
-    //
-    //}
+
 
   } while (!gameState.gameOver);
 
   close_keyboard();
   clear();
 
-  if(boxes.list) free(boxes.list);
-  if(goals.list) free(goals.list);
-  if(gameState.currrentMap.field) {
-    for(int i = 0; i < gameState.currrentMap.height; i++) {
-      free(gameState.currrentMap.field[i]);
-    }
-  }
+  destroy(&boxes, "Boxes");
+  destroy(&goals, "Goals");
+  destroy(&gameState, "GameState");
 
   return 0;
 }
-
