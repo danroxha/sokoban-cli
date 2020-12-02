@@ -22,9 +22,6 @@ int main() {
   GameState gameState;
   Object character;
   
-
-  gameState.currrentMap.width = SIZE;
-  gameState.currrentMap.height = SIZE;
   gameState.boxes = &boxes;
   gameState.character = &character;
 
