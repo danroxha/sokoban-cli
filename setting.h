@@ -63,20 +63,23 @@ void configBoxes(Boxes *boxes, GameState *gameState) {
 void configGoals(Goals *goals, GameState *gameState) {
   
   goals->lenght = 0;
-  if(goals->list)
-    free(goals->list);
-
+  goals->list = NULL;
+  // goals->list = (Object*) realloc(goals->list, 0 * sizeof(Object));
+  //if(goals->list != NULL)
+  //  free(goals->list);
   for(int y = 0; y < gameState->currrentMap.height; y++) {
     for(int x = 0; x < gameState->currrentMap.width; x++) {
       if(gameState->currrentMap.field[y][x] == TARGET) {
         goals->lenght++;
         goals->list = (Object*) realloc(goals->list, goals->lenght * sizeof(Object));
+        
         goals->list[goals->lenght - 1].body = TARGET;
         goals->list[goals->lenght - 1].x = x + 1;
         goals->list[goals->lenght - 1].y = y + 1;
       }
     }
   }
+  return;
 }
 
 void configGameState(GameState *gameState) {

@@ -2,7 +2,7 @@
 #include "setting.h"
 #include "logic.h"
 
-#define __DEBUGGER_BUILD_MAP_TEST__
+//#define __DEBUGGER_BUILD_MAP_TEST__
 
 
 int main() {
@@ -27,63 +27,13 @@ int main() {
   gameState.boxes = &boxes;
   gameState.character = &character;
 
- 
-
-  char map[SIZE][SIZE] = {
-  "                    \n",
-  "                    \n",
-  "      LEVEL 1       \n",
-  "                    \n",
-  "                    \n",
-  "    *****           \n",
-  "    *   *           \n",
-  "    *#  *           \n",
-  "  ***  #**          \n",
-  "  *  # # *          \n",
-  "*** * ** *    ******\n",
-  "*   * ** ******  ??*\n",
-  "* #  #           ??*\n",
-  "***** ***  *@**  ??*\n",
-  "    *     **********\n",
-  "    *******         \n",
-  "                    \n",
-  "                    \n",
-  "                    \n",
-  "                    \n",
-  "                    \n",
-  };
+  gameState.currrentMap = loadMap("./world/level_2/level_2_1.map");
   
-  // char map[SIZE][SIZE] = {
-      // "          \n",
-      // "  Level 1 \n",
-      // "          \n",
-      // "          \n",
-      // "   ##     \n",
-      // "          \n",
-      // "   @ #    \n",
-      // "     #    \n",
-      // "          \n",
-      // "          \n",
-      // "          \n",
-  // };
   
-
   init_keyboard();
   nocursor();
 
-   // COPY MAP START
-  gameState.currrentMap.field = (char**) calloc(SIZE, sizeof(char*));
   
-  for(int i = 0; i < SIZE; i++){
-    gameState.currrentMap.field[i] = (char*) calloc(SIZE, sizeof(char));
-  }
-  
-  for (int i = 0; i < SIZE; i++) 
-    for (int j = 0; j < SIZE; j++) {
-      gameState.currrentMap.field[i][j] = map[i][j];
-    }
-  // COPY MAP END  
-
   configGameState(&gameState);
   configCharacter(&character, &gameState);
   configBoxes(&boxes, &gameState);
@@ -94,8 +44,10 @@ int main() {
   drawMap(&gameState);
   gotoxy(character.x, character.y);
 
+
   int key;
   int timeStart = time(0);
+  
   do {
     gotoxy(0, 0);
     printf("Time: %lds", time(0) - timeStart);
@@ -105,10 +57,10 @@ int main() {
       if (key == CTRL_C)
         break;
 
-      bool collision_wall_top = map[character.y - 2][character.x - 1]    == WALL;
-      bool collision_wall_bottom = map[character.y][character.x - 1]     == WALL;
-      bool collision_wall_left = map[character.y - 1][character.x]       == WALL;
-      bool collision_wall_right = map[character.y - 1][character.x - 2]  == WALL;
+      bool collision_wall_top = gameState.currrentMap.field[character.y - 2][character.x - 1]    == WALL;
+      bool collision_wall_bottom = gameState.currrentMap.field[character.y][character.x - 1]     == WALL;
+      bool collision_wall_left = gameState.currrentMap.field[character.y - 1][character.x]       == WALL;
+      bool collision_wall_right = gameState.currrentMap.field[character.y - 1][character.x - 2]  == WALL;
 
       if (key == KEY_ARROW_UP && !collision_wall_top)
         character.y--;
@@ -124,10 +76,10 @@ int main() {
 
       for(int i = 0; i < boxes.lenght; i++) {
         
-        collision_wall_top    = map[boxes.list[i].y - 2][boxes.list[i].x - 1] == WALL;
-        collision_wall_bottom = map[boxes.list[i].y][boxes.list[i].x - 1]     == WALL;
-        collision_wall_left   = map[boxes.list[i].y - 1][boxes.list[i].x]     == WALL;
-        collision_wall_right  = map[boxes.list[i].y - 1][boxes.list[i].x - 2] == WALL;
+        collision_wall_top    = gameState.currrentMap.field[boxes.list[i].y - 2][boxes.list[i].x - 1] == WALL;
+        collision_wall_bottom = gameState.currrentMap.field[boxes.list[i].y][boxes.list[i].x - 1]     == WALL;
+        collision_wall_left   = gameState.currrentMap.field[boxes.list[i].y - 1][boxes.list[i].x]     == WALL;
+        collision_wall_right  = gameState.currrentMap.field[boxes.list[i].y - 1][boxes.list[i].x - 2] == WALL;
         
 
         bool collision_box = boxes.list[i].x == character.x && boxes.list[i].y == character.y;
@@ -155,7 +107,7 @@ int main() {
             }
           }
         }
-        else if (key == KEY_ARROW_RIGHT && collision_box && !collision_wall_left) {
+        else if (key == KEY_ARROW_RIGHT && collision_box && !collision_wall_right) {
           boxes.list[i].x++;
           for(int j = 0; j < boxes.lenght; j++) {
             if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
@@ -165,7 +117,7 @@ int main() {
             }
           }
         }
-        else if (key == KEY_ARROW_LEFT && collision_box && !collision_wall_right) {
+        else if (key == KEY_ARROW_LEFT && collision_box && !collision_wall_left) {
           boxes.list[i].x--;
           for(int j = 0; j < boxes.lenght; j++) {
             if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
