@@ -1,6 +1,7 @@
 #include "./lib/sokoban.h"
 #include "setting.h"
 #include "logic.h"
+#include "move.h"
 
 //#define __DEBUGGER_BUILD_MAP_TEST__
 
@@ -49,100 +50,18 @@ int main() {
   int timeStart = time(0);
   
   do {
+    
     gotoxy(0, 0);
     printf("Time: %lds", time(0) - timeStart);
+
     if (kbhit()) {
 
       key = readch();
       if (key == CTRL_C)
         break;
 
-      bool collision_wall_top = gameState.currrentMap.field[character.y - 2][character.x - 1]    == WALL;
-      bool collision_wall_bottom = gameState.currrentMap.field[character.y][character.x - 1]     == WALL;
-      bool collision_wall_left = gameState.currrentMap.field[character.y - 1][character.x]       == WALL;
-      bool collision_wall_right = gameState.currrentMap.field[character.y - 1][character.x - 2]  == WALL;
-
-      if (key == KEY_ARROW_UP && !collision_wall_top)
-        character.y--;
-      else if (key == KEY_ARROW_DOWN && !collision_wall_bottom)
-        character.y++;
-      else if (key == KEY_ARROW_RIGHT && !collision_wall_left)
-        character.x++;
-      else if (key == KEY_ARROW_LEFT && !collision_wall_right)
-        character.x--;
-
-
-
-
-      for(int i = 0; i < boxes.lenght; i++) {
-        
-        collision_wall_top    = gameState.currrentMap.field[boxes.list[i].y - 2][boxes.list[i].x - 1] == WALL;
-        collision_wall_bottom = gameState.currrentMap.field[boxes.list[i].y][boxes.list[i].x - 1]     == WALL;
-        collision_wall_left   = gameState.currrentMap.field[boxes.list[i].y - 1][boxes.list[i].x]     == WALL;
-        collision_wall_right  = gameState.currrentMap.field[boxes.list[i].y - 1][boxes.list[i].x - 2] == WALL;
-        
-
-        bool collision_box = boxes.list[i].x == character.x && boxes.list[i].y == character.y;
-
-        if (key == KEY_ARROW_UP && collision_box && !collision_wall_top) {
-          
-          boxes.list[i].y--;
-          for(int j = 0; j < boxes.lenght; j++) {
-            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
-            && boxes.list[i].y == boxes.list[j].y) {
-              boxes.list[i].y++;
-              character.y++;
-            }
-          }
-          
-        }
-        else if (key == KEY_ARROW_DOWN && collision_box && !collision_wall_bottom) {
-          boxes.list[i].y++;
-          
-          for(int j = 0; j < boxes.lenght; j++) {
-            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
-            && boxes.list[i].y == boxes.list[j].y) {
-              boxes.list[i].y--;
-              character.y--;
-            }
-          }
-        }
-        else if (key == KEY_ARROW_RIGHT && collision_box && !collision_wall_right) {
-          boxes.list[i].x++;
-          for(int j = 0; j < boxes.lenght; j++) {
-            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
-            && boxes.list[i].y == boxes.list[j].y) {
-              boxes.list[i].x--;
-              character.x--;
-            }
-          }
-        }
-        else if (key == KEY_ARROW_LEFT && collision_box && !collision_wall_left) {
-          boxes.list[i].x--;
-          for(int j = 0; j < boxes.lenght; j++) {
-            if(boxes.list[i].id != boxes.list[j].id && boxes.list[i].x == boxes.list[j].x 
-            && boxes.list[i].y == boxes.list[j].y) {
-              boxes.list[i].x++;
-              character.x++;
-            }
-          }
-        }
-        
-
-        // No run throungh on Box;
-        if (key == KEY_ARROW_UP && collision_box && collision_wall_top) {
-          character.y++;
-        }
-        else if (key == KEY_ARROW_DOWN && collision_box && collision_wall_bottom) {
-          character.y--;
-        }
-        else if (key == KEY_ARROW_LEFT && collision_box && collision_wall_left) {
-          character.x--;
-        }
-        else if (key == KEY_ARROW_RIGHT && collision_box && collision_wall_right) {
-          character.x++;
-        }
-      }
+      moveDoll(&gameState, &character, key);
+      moveBoxes(&gameState, &boxes, &character, key);
 
       handleBoxesOnTarget(&boxes, &goals);
       checkPuzzleSolution(&gameState);
