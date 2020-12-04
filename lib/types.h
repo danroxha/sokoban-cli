@@ -6,12 +6,17 @@
 #define DOLL   '@'
 #define TARGET '?'
 
+enum {
+	MENU_CONTINUE    = 1,
+	MENU_NEW_GAME    = 2,
+	MENU_HOW_TO_PLAY = 3, 
+	MENU_EXIT        = 4
+};
 
 typedef struct error{
   char *message;
   char *type;
 } Error;
-
 
 typedef struct errors
 {
@@ -60,7 +65,6 @@ typedef struct gameState {
   int level;
 } GameState;
 
-
 typedef struct Levels {
   char **filenames;
   char **paths;
@@ -68,10 +72,24 @@ typedef struct Levels {
 
 } Levels;
 
-
 typedef struct world {
   Levels *levels;
   int total;
 } World;
+
+typedef struct screen {
+	int width, height;
+	int centerWidth, centerHeight;
+} Screen;
+
+typedef struct cursor {
+	int x, y;
+} Cursor;
+
+
+typedef struct program {
+	bool running;
+} Program;
+
 
 #endif // __TYPES_SOKOBAN_H__
