@@ -176,7 +176,7 @@ void bannerHowToPlay() {
       and the r key to restart the level.  \r\n\
       \n\
             \x1b[33m↑ - up\r\n\
-            → - right          r - reset\r\n\
+            → - right          r - restart\r\n\
             ← - left\r\n\
             ↓ - down\x1b[0m\r\n\
     \n\
