@@ -20,6 +20,7 @@ enum Keys {
   KEY_ARROW_RIGHT = 67,
   KEY_R_L         = 114, // KEY R LOWERCASE
   KEY_R_U         = 82,  // KEY R UPPERCASE
+  KEY_ENTER       = 13
 };
 
 void init_keyboard()
