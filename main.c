@@ -14,8 +14,6 @@ int main() {
     hasIssueInMapsFile("world/");
     return 0;
   #endif
-
-  #define SIZE 21
   
   Boxes boxes;
   Goals goals;
