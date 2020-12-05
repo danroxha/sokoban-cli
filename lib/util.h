@@ -177,3 +177,18 @@ void destroy(void *memory, const char* type) {
 }
 
 #endif // __UTIL_TEST_H__
+
+#ifndef __UTIL_NUMBER_H__
+#define __UTIL_NUMBER_H__
+
+int numberLength(int number) {
+  int size = 0;
+
+  while(number /= 10) {
+    size++;
+  }
+
+  return size;
+}
+
+#endif // __UTIL_NUMBER_H__
