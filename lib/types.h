@@ -63,6 +63,7 @@ typedef struct gameState {
   Object *character;
   bool gameOver;
   int level;
+  int time;
 } GameState;
 
 typedef struct Levels {
