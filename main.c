@@ -24,6 +24,7 @@ int main() {
   
   gameState.boxes = &boxes;
   gameState.character = &character;
+  gameState.time = time(0);
 
   gameState.currrentMap = loadMap("./world/level_2/level_2_1.map");
   
@@ -44,12 +45,11 @@ int main() {
 
 
   int key;
-  int timeStart = time(0);
+ 
   
   do {
     
-    gotoxy(0, 0);
-    printf("Time: %lds", time(0) - timeStart);
+    drawIimeBar(&gameState);
 
     if (kbhit()) {
 
@@ -76,6 +76,7 @@ int main() {
 
   close_keyboard();
   clear();
+  showcursor();
 
   destroy(&boxes, "Boxes");
   destroy(&goals, "Goals");
