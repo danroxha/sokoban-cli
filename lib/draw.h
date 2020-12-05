@@ -94,10 +94,11 @@ void drawIimeBar(GameState *gameState) {
   char* textTime = "Time: ";
   char* labelTime = (char*) calloc(strlen(textTime) + numberLength(stopwatch), sizeof(char));
   
-  int x  = screen.centerWidth - strlen(labelTime) / 2;
+  sprintf(labelTime, "%s%ds", textTime, stopwatch);
+
+  int x  = screen.centerWidth - strlen(labelTime) / 2.5;
   int y = screen.centerHeight + gameState->currrentMap.height / 1.5;
 
-  sprintf(labelTime, "%s%ds", textTime, stopwatch);
   gotoxy(x, y);
   printf("%s", labelTime);
   
