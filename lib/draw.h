@@ -2,58 +2,106 @@
 #define __DRAW_SOKOBAN_H__
 
 #include <stdio.h>
+#include <string.h>
 #include "types.h"
 #include "screen.h"
+#include "util.h"
 
 void drawMap(GameState*);
 void drawBoxes(Boxes*);
 void drawObject(Object*);
 
+static int centerWidth = 0;
+static int centerHeight = 0;
+
 void drawBoxes(Boxes *boxes) {
+    
   for(int i = 0; i < boxes->lenght; i++) {
-    gotoxy(boxes->list[i].x, boxes->list[i].y);
-    if(boxes->list[i].enable) {
-      printf("\x1b[37;42;1m");
-    }
-    else {
-      printf("\x1b[41;1m");
-    }
+    
+    gotoxy(centerWidth + boxes->list[i].x, centerHeight + boxes->list[i].y);
+    
+    if(boxes->list[i].enable)
+      textcolor(BGC_IGREEN);
+    else 
+      textcolor(BGC_IRED);
+  
     printf("%c", boxes->list[i].body);
-    printf("\x1b[0m");
+    reset_video();
   }
 }
 
 void drawMap(GameState *gameState) {
 
-  for(int i = 0; i < gameState->currrentMap.height; i++)
-    for(int j = 0; j < gameState->currrentMap.width; j++) {
-   
-      if (gameState->currrentMap.field[i][j] == TARGET) {
-        printf("\x1b[32;1m");
-        printf("%c", gameState->currrentMap.field[i][j]);
-        printf("\x1b[0m");
+  Screen screen = getScreenSize();
+  centerWidth  = screen.centerWidth - gameState->currrentMap.width / 2;
+  centerHeight = screen.centerHeight - gameState->currrentMap.height / 2;
+  
+
+  for(int y = 0; y < gameState->currrentMap.height; y++) {
+    
+    enum  {
+      LINE_STRING_WORLD = 1,
+      LINE_STRING_LEVEL = 2,
+    };
+
+    if(y == LINE_STRING_WORLD || y == LINE_STRING_LEVEL) {
+
+      gotoxy(centerWidth + 1, centerHeight + y + 1);
+      textcolor(IYELLOW);
+      printf("%s", gameState->currrentMap.field[y]);
+      reset_video();
+      continue;
+
+    }
+
+    for(int x = 0; x < gameState->currrentMap.width; x++) {
+      
+      gotoxy(centerWidth + x + 1, centerHeight + y + 1);
+    
+      if (gameState->currrentMap.field[y][x] == TARGET) {
+        textcolor(IGREEN);
+        printf("%c", gameState->currrentMap.field[y][x]);
+        reset_video();
       }
       // DRAW WALL
-      else if (gameState->currrentMap.field[i][j] == WALL) {
-        printf("\x1b[46m");
-        printf("%c", gameState->currrentMap.field[i][j]);
-        printf("\x1b[0m");
+      else if (gameState->currrentMap.field[y][x] == WALL) {
+        textcolor(BGC_CYAN);
+        printf("%c", gameState->currrentMap.field[y][x]);
+        reset_video();
       }
       // DRAW ANY
       else {
-        printf("%c", gameState->currrentMap.field[i][j]);
+        printf("%c", gameState->currrentMap.field[y][x]);
       }
     }
-
-    gotoxy(gameState->character->x, gameState->character->y);
+  }
 }
 
 void drawObject(Object *object) {
   
-  gotoxy(object->x, object->y);
-  printf("\x1b[33;1m");
+  gotoxy(centerWidth + object->x, centerHeight + object->y);
+  textcolor(IYELLOW);
   printf("%c", object->body);
+  reset_video();
 
+}
+
+void drawIimeBar(GameState *gameState) {
+
+  Screen screen = getScreenSize();
+  
+  int stopwatch = time(0) - gameState->time;
+  char* textTime = "Time: ";
+  char* labelTime = (char*) calloc(strlen(textTime) + numberLength(stopwatch), sizeof(char));
+  
+  int x  = screen.centerWidth - strlen(labelTime) / 2;
+  int y = screen.centerHeight + gameState->currrentMap.height / 1.5;
+
+  sprintf(labelTime, "%s%ds", textTime, stopwatch);
+  gotoxy(x, y);
+  printf("%s", labelTime);
+  
+  free(labelTime);
 }
 
 
