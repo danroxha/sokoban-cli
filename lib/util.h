@@ -170,7 +170,8 @@ void destroy(void *memory, const char* type) {
   }
   // FREE SAVESTATE
   else if(!strcmp(type, "SaveState")) {
-    SaveState *savestate = (SaveState) memory;
+    SaveState *savestate = (SaveState*) memory;
+    
     if(savestate->path)
       free(savestate->path);
   }
