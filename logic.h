@@ -5,7 +5,7 @@
 #include "lib/types.h"
 
 bool checkCollisionBetweenBoxes(Boxes*);
-void checkPuzzleSolution(GameState*);
+bool checkPuzzleSolution(GameState*);
 void handleBoxesOnTarget(Boxes*, Goals*);
 
 
@@ -23,7 +23,7 @@ bool checkCollisionBetweenBoxes(Boxes *boxes) {
   return false;
 }
 
-void checkPuzzleSolution(GameState *gameState) {
+bool checkPuzzleSolution(GameState *gameState) {
   
   int completePuzzle = 0;
   
@@ -32,7 +32,7 @@ void checkPuzzleSolution(GameState *gameState) {
       completePuzzle++;
   }
 
-  gameState->gameOver = completePuzzle == gameState->boxes->lenght;
+  return completePuzzle == gameState->boxes->lenght;
 
 }
 
