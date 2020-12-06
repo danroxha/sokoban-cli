@@ -59,9 +59,10 @@ typedef struct map {
 
 typedef struct gameState {
   Boxes *boxes;
+  Goals *goals;
   Map currrentMap;
   Object *character;
-  bool gameOver;
+  bool win;
   int level;
   int time;
 } GameState;
