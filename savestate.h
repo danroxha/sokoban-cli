@@ -7,9 +7,9 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "screen.h"
-#include "types.h"
-#include "util.h"
+#include "lib/screen.h"
+#include "lib/types.h"
+#include "lib/util.h"
 
 
 SaveState loadSaveState(const char* dirname);
@@ -19,7 +19,7 @@ void defineSaveState(SaveState savestate);
 
 SaveState loadSaveState(const char* dirname) {
 
-	SaveState savestate = {1, 1, NULL};
+	SaveState savestate = {0, 0, NULL};
 	const char* filename = "savestate.txt";
 	const int mode = 0777;
 	savestate.path = (char*) calloc(strlen(dirname) + strlen(filename), sizeof(char));

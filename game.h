@@ -5,9 +5,11 @@
 #include "setting.h"
 #include "logic.h"
 #include "move.h"
+#include "savestate.h"
 
 //#define __DEBUGGER_BUILD_MAP_TEST__
-
+void nextLevel(GameState *gameState, SaveState *savestate, World *world);
+void resetLevel(GameState *gameState, SaveState *savestate, World *world);
 
 void game() {
   
@@ -27,8 +29,10 @@ void game() {
   gameState.character = &character;
   gameState.time = time(0);
 
-  gameState.currrentMap = loadMap("./world/level_2/level_2_1.map");
-  
+  SaveState savestate = loadSaveState("savestate/");
+  World world = loadWorlds("world/");
+
+  gameState.currrentMap = loadMap(world.levels[savestate.world].paths[savestate.level]);
 
   
   configGameState(&gameState);
@@ -59,7 +63,14 @@ void game() {
       moveBoxes(&gameState, &boxes, &character, key);
 
       handleBoxesOnTarget(&boxes, &goals);
-      checkPuzzleSolution(&gameState);
+      gameState.win = checkPuzzleSolution(&gameState);
+      
+      
+      if(gameState.win)
+        nextLevel(&gameState, &savestate, &world);
+
+      if(key == KEY_R_U || key == KEY_R_L)
+        resetLevel(&gameState, &savestate, &world);
       
       clear();
       drawMap(&gameState);
@@ -69,15 +80,15 @@ void game() {
     drawObject(&character);
     drawBoxes(&boxes);
 
+  } while (key != KEY_ENTER);
 
-  } while (!gameState.gameOver);
-
-  close_keyboard();
   clear();
 
   destroy(&boxes, "Boxes");
   destroy(&goals, "Goals");
+  destroy(&world, "World");
   destroy(&gameState, "GameState");
+  destroy(&savestate, "SaveState");
 
 }
 

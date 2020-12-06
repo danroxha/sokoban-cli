@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include "lib/types.h"
-
+#include "savestate.h"
 
 void configCharacter(Object*, GameState*);
 void configBoxes(Boxes*, GameState*);
@@ -64,6 +64,8 @@ void configGoals(Goals *goals, GameState *gameState) {
   
   goals->lenght = 0;
   goals->list = NULL;
+  gameState->goals = goals;
+  
   if(goals->list != NULL)
     free(goals->list);
   
@@ -79,11 +81,51 @@ void configGoals(Goals *goals, GameState *gameState) {
       }
     }
   }
+
   return;
 }
 
 void configGameState(GameState *gameState) {
-  gameState->gameOver = false;
+  gameState->win = false;
+}
+
+void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
+  
+  savestate->level++;
+
+  if(world->levels[savestate->world].total - 1 < savestate->level) {
+    savestate->world++;
+    savestate->level = 0;
+  }
+
+  if(world->total <= savestate->world) {
+    savestate->world = 0;
+    savestate->level = 0;
+  }
+  
+
+  defineSaveState(*savestate);
+  
+  gameState->currrentMap = loadMap(world->levels[savestate->world].paths[savestate->level]);
+  
+  configGameState(gameState);
+  configCharacter(gameState->character, gameState);
+  configBoxes(gameState->boxes, gameState);
+  configGoals(gameState->goals, gameState);
+
+  gameState->time = time(0);
+}
+
+void resetLevel(GameState *gameState, SaveState *savestate, World *world) {
+  
+  gameState->currrentMap = loadMap(world->levels[savestate->world].paths[savestate->level]);
+
+  configGameState(gameState);
+  configCharacter(gameState->character, gameState);
+  configBoxes(gameState->boxes, gameState);
+  configGoals(gameState->goals, gameState);
+
+  gameState->time = time(0);
 }
 
 #endif // __SETTING_SOKOBAN_H__
