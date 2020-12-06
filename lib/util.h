@@ -168,6 +168,12 @@ void destroy(void *memory, const char* type) {
     if(gameState->currrentMap.field != NULL)
       destroy(&gameState->currrentMap.field, "Map");
   }
+  // FREE SAVESTATE
+  else if(!strcmp(type, "SaveState")) {
+    SaveState *savestate = (SaveState) memory;
+    if(savestate->path)
+      free(savestate->path);
+  }
   else {
     fprintf(stderr, "\033[31;1mFILE: %s \n \033[0;1m", __FILE__);
     fprintf(stderr, "\033[31;1mError ↴\n  'destroy': Função 'destroy' recebeu tipo não registrado\n\033[0;1m");

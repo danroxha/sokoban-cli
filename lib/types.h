@@ -93,4 +93,11 @@ typedef struct program {
 } Program;
 
 
+typedef struct savestate {
+	int world;
+	int level;
+	char* path;
+} SaveState;
+
+
 #endif // __TYPES_SOKOBAN_H__
