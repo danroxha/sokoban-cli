@@ -29,9 +29,6 @@ void game() {
 
   gameState.currrentMap = loadMap("./world/level_2/level_2_1.map");
   
-  
-  init_keyboard();
-  nocursor();
 
   
   configGameState(&gameState);
