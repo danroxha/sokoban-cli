@@ -2,6 +2,7 @@
 #define __SETTING_SOKOBAN_H__
 
 #include <stdlib.h>
+#include <time.h>
 #include "lib/types.h"
 #include "savestate.h"
 
@@ -87,6 +88,7 @@ void configGoals(Goals *goals, GameState *gameState) {
 
 void configGameState(GameState *gameState) {
   gameState->win = false;
+  gameState->time = time(0);
 }
 
 void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
