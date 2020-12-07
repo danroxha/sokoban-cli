@@ -26,7 +26,6 @@ void game() {
   
   gameState.boxes = &boxes;
   gameState.character = &character;
-  gameState.time = time(0);
 
   SaveState savestate = loadSaveState("savestate/");
   World world = loadWorlds("world/");
@@ -51,6 +50,7 @@ void game() {
   do {
     
     drawIimeBar(&gameState);
+    drawHelpBar(&gameState);
 
     if (kbhit()) {
 

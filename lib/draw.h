@@ -10,6 +10,7 @@
 void drawMap(GameState*);
 void drawBoxes(Boxes*);
 void drawObject(Object*);
+void drawHelpBar(GameState *gameState);
 
 static int centerWidth = 0;
 static int centerHeight = 0;
@@ -105,5 +106,24 @@ void drawIimeBar(GameState *gameState) {
   free(labelTime);
 }
 
+void drawHelpBar(GameState *gameState) {
+  
+  Screen screen = getScreenSize();
+  const float MARGIN_X = 6.0;
+  const float MARGIN_Y = 2.0;
+  
+  const char* helpText = "\033[36;1m'Menu'\033[0;0m - \033[32;1mENTER\033[0;0m |\
+ \033[36;1m'Restart'\033[0;0m - \033[32;1mR\033[0;0m";
+  
+  int x = screen.centerWidth - strlen(helpText) / MARGIN_X;
+  int y = screen.centerHeight - gameState->currrentMap.height / MARGIN_Y;
+
+  gotoxy(x, y);
+  textcolor(ICYAN);
+  textcolor(ICYAN);
+  printf("%s", helpText);
+  reset_video();
+  
+}
 
 #endif //__DRAW_SOKOBAN_H__
