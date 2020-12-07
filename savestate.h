@@ -14,7 +14,8 @@
 
 SaveState loadSaveState(const char* dirname);
 void defineSaveState(SaveState savestate);
-
+void removeSaveState(const char* dirname);
+bool thereIsSavestate(const char* dirname);
 
 
 SaveState loadSaveState(const char* dirname) {
@@ -78,5 +79,22 @@ void defineSaveState(SaveState savestate) {
 	
 }
 
+void removeSaveState(const char* dirname) {
 
+	SaveState savestate = loadSaveState(dirname);
+	unlink(savestate.path);
+	
+	if(rmdir(dirname)) {
+		clear();
+		showcursor();
+    textcolor(IRED);
+		fprintf(stderr, "Error: Não foi possivel remover o savestate de: %s", dirname);
+    reset_video();
+		exit(1);
+	}
+}
+
+bool thereIsSavestate(const char* dirname) {
+	return isdir(dirname);
+}
 #endif // __SAVESTATE_SOKOBAN_H__

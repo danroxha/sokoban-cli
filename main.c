@@ -46,6 +46,7 @@ int main() {
 						break;
 					}
 					case MENU_NEW_GAME: {
+						removeSaveState("savestate/");
 						game();
 						break;
 					}
@@ -82,7 +83,7 @@ void menu(Screen screen, Cursor *cursor, int *option) {
 
 	int padding  = 1;
 	int height   = 2;
-	bool isContinue = false;
+	bool isContinue = thereIsSavestate("savestate/");
 	
 	const char* line = "==================================================";
 	const char* banner = "\
