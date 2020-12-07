@@ -149,7 +149,7 @@ void howToPlay() {
 	
 	int key;
 	clear();
-	bannerHowToPlay();
+	drawBannerHowToPlay();
 	
 	do {
 		
@@ -158,61 +158,7 @@ void howToPlay() {
 			key = readch();
 			clear();
 		}
-		bannerHowToPlay();
+		drawBannerHowToPlay();
 	}
 	while(key != KEY_ENTER);
-}
-
-void bannerHowToPlay() {
-	
-
-	Screen screen = getScreenSize();
-	int centerWidth     = screen.centerWidth;
-	int centerHeight    = screen.height / 4;
-
-	const char* banner	= "\
-	|_  _       _|_ _    |_) |  _  \\/\r\n \
-	| |(_)\\^/    |_(_)   |   | (_| /  \r\n \
-	";
-
-	const char* tutorial = "\n\
-      Use the arrows to move the character \r\n\
-      and the r key to restart the level.  \r\n\
-      \n\
-            \x1b[33m↑ - up\r\n\
-            → - right          r - restart\r\n\
-            ← - left\r\n\
-            ↓ - down\x1b[0m\r\n\
-    \n\
-    \n\
-             Press ENTER to return\
-";
-
-
-	int h = centerHeight;
-	int centerBanner = centerWidth - strlen(banner) /  3;
-	gotoxy(centerBanner , h + 1);
-	textcolor(IBLUE);
-	
-	for(int i = 0; i < strlen(banner); i++){
-		if(banner[i] == '\n'){
-			h++;
-			gotoxy(centerBanner, h);
-		}
-    
-		printf("%c", banner[i]);
-	}
-
-	for(int i = 0; i < strlen(tutorial); i++){
-		if(tutorial[i] == '\n'){
-			h++;
-			gotoxy(centerBanner, h);
-		}
-    
-		printf("%c", tutorial[i]);
-	}
-	
-	
-	reset_video();
-
 }

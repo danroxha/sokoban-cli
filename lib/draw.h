@@ -12,6 +12,7 @@ void drawBoxes(Boxes*);
 void drawObject(Object*);
 void drawIimeBar(GameState*);
 void drawHelpBar(GameState *gameState);
+void drawBannerHowToPlay(void);
 
 static int centerWidth = 0;
 static int centerHeight = 0;
@@ -127,4 +128,56 @@ void drawHelpBar(GameState *gameState) {
   
 }
 
+void drawBannerHowToPlay(void) {
+	
+	Screen screen = getScreenSize();
+  
+  const float MARING_X = 3.5;
+	const float MARING_Y = 4.0;
+	int centerWidth     = screen.centerWidth;
+	int centerHeight    = screen.height / MARING_Y;
+
+	const char* banner	= "\
+	|_  _       _|_ _    |_) |  _  \\/\r\n \
+	| |(_)\\^/    |_(_)   |   | (_| /  \r\n \
+	";
+
+	const char* tutorial = "\n\
+      Use the arrows to move the character \r\n\
+      and the r key to restart the level.  \r\n\n        \
+     \033[33m↑ \n\
+           ←   →                r\r\n\
+             ↓ \x1b[0m \n      \
+     \033[34;1mArrows\033[0m            \033[34;1mRestart\033[0m   \n\n\
+             Press ENTER to return\
+";
+
+
+	int y = centerHeight;
+	int centerBanner = centerWidth - strlen(banner) / MARING_X;
+
+	gotoxy(centerBanner , y + 1);
+	textcolor(IBLUE);
+	
+	for(int i = 0; i < strlen(banner); i++){
+		if(banner[i] == '\n'){
+			y++;
+			gotoxy(centerBanner, y);
+		}
+    
+		printf("%c", banner[i]);
+	}
+
+	for(int i = 0; i < strlen(tutorial); i++) {
+		if(tutorial[i] == '\n') {
+			y++;
+			gotoxy(centerBanner, y);
+		}
+    
+		printf("%c", tutorial[i]);
+	}
+	
+	reset_video();
+
+}
 #endif //__DRAW_SOKOBAN_H__
