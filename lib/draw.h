@@ -10,6 +10,7 @@
 void drawMap(GameState*);
 void drawBoxes(Boxes*);
 void drawObject(Object*);
+void drawIimeBar(GameState*);
 void drawHelpBar(GameState *gameState);
 
 static int centerWidth = 0;
