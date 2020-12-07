@@ -132,52 +132,36 @@ void drawBannerHowToPlay(void) {
 	
 	Screen screen = getScreenSize();
   
-  const float MARING_X = 3.5;
-	const float MARING_Y = 4.0;
-	int centerWidth     = screen.centerWidth;
-	int centerHeight    = screen.height / MARING_Y;
+  const char* tutorial[] = {
+    "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄",
+    "█░████▀▄▄▀█░███░███▄░▄█▀▄▄▀███▀▄▄▀█░██░▄▄▀█░██░█",
+    "█░▄▄░█░██░█▄▀░▀▄████░██░██░███░▀▀░█░██░▀▀░█░▀▀░█",
+    "█▄██▄██▄▄███▄█▄█████▄███▄▄████░████▄▄█▄██▄█▀▀▀▄█",
+    "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀",
+    "      Use the arrows to move the character      ",
+    "      and the r key to restart the level.       ",
+    "             \033[33;1m↑                        ",
+    "           ←   →               r                ",
+    "             ↓\033[0m                           ", 
+    "           \033[34;1mArrows\033[0m           \033[34;1mRestart\033[0m",
+    "                                                ",
+    "                                                ",
+    "            \033[0;34;5mPress ENTER to return\033[0m",
+  };
 
-	const char* banner	= "\
-	|_  _       _|_ _    |_) |  _  \\/\r\n \
-	| |(_)\\^/    |_(_)   |   | (_| /  \r\n \
-	";
+  const float MARGIN_X = 6.0;
+  const float MARGIN_Y = 4.0;
 
-	const char* tutorial = "\n\
-      Use the arrows to move the character \r\n\
-      and the r key to restart the level.  \r\n\n        \
-     \033[33m↑ \n\
-           ←   →                r\r\n\
-             ↓ \x1b[0m \n      \
-     \033[34;1mArrows\033[0m            \033[34;1mRestart\033[0m   \n\n\
-             Press ENTER to return\
-";
+  int size =  (int)sizeof(tutorial) / sizeof(char*);
+  int verticalAlign   = screen.centerWidth - strlen(tutorial[0]) / MARGIN_X;
+  int horizontalAlign = screen.height / MARGIN_Y;
 
+  for(int i = 0; i < size; i++) {
+    gotoxy(verticalAlign, horizontalAlign + i);
+    printf("%s", tutorial[i]);
+  }
 
-	int y = centerHeight;
-	int centerBanner = centerWidth - strlen(banner) / MARING_X;
-
-	gotoxy(centerBanner , y + 1);
-	textcolor(IBLUE);
-	
-	for(int i = 0; i < strlen(banner); i++){
-		if(banner[i] == '\n'){
-			y++;
-			gotoxy(centerBanner, y);
-		}
-    
-		printf("%c", banner[i]);
-	}
-
-	for(int i = 0; i < strlen(tutorial); i++) {
-		if(tutorial[i] == '\n') {
-			y++;
-			gotoxy(centerBanner, y);
-		}
-    
-		printf("%c", tutorial[i]);
-	}
-	
-	reset_video();
+  reset_video();
 
 }
 #endif //__DRAW_SOKOBAN_H__
