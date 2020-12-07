@@ -8,8 +8,7 @@
 #include "savestate.h"
 
 //#define __DEBUGGER_BUILD_MAP_TEST__
-void nextLevel(GameState *gameState, SaveState *savestate, World *world);
-void resetLevel(GameState *gameState, SaveState *savestate, World *world);
+
 
 void game() {
   
