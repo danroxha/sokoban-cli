@@ -40,8 +40,8 @@ typedef struct box {
 } Box;
 
 typedef struct goals {
-  int lenght;
   Object *list;
+  int lenght;
 } Goals;
 
 typedef struct {
