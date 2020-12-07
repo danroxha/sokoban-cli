@@ -18,18 +18,15 @@ typedef struct error{
   char *type;
 } Error;
 
-typedef struct errors
-{
+typedef struct errors {
   Error *list;
   bool hasError;
   int size;
 } Errors;
 
 typedef struct object {
-
   int x, y;
   char body;
-
 } Object;
 
 typedef struct box {
