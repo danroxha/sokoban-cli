@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include "lib/types.h"
+#include "../lib/types.h"
 #include "savestate.h"
 
 void configCharacter(Object*, GameState*);

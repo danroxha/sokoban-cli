@@ -7,9 +7,9 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "lib/screen.h"
-#include "lib/types.h"
-#include "lib/util.h"
+#include "../lib/screen.h"
+#include "../lib/types.h"
+#include "../lib/util.h"
 
 
 SaveState loadSaveState(const char* dirname);

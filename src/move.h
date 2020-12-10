@@ -1,8 +1,8 @@
 #ifndef __MOVE_SOKOBAN_H__
 #define __MOVE_SOKOBAN_H__
 
-#include "lib/types.h"
-#include "lib/keyboard.h"
+#include "../lib/types.h"
+#include "../lib/keyboard.h"
 
 
 void moveDoll(GameState*, Object*, int);

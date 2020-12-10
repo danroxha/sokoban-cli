@@ -1,7 +1,7 @@
 #ifndef __GAME_SOKOBAN_INIT_H__
 #define __GAME_SOKOBAN_INIT_H__
 
-#include "./lib/sokoban.h"
+#include "../lib/sokoban.h"
 #include "setting.h"
 #include "logic.h"
 #include "move.h"

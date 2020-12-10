@@ -2,7 +2,7 @@
 #define __LOGIC_SOKOBAN_H__
 
 #include <stdbool.h>
-#include "lib/types.h"
+#include "../lib/types.h"
 
 bool checkCollisionBetweenBoxes(Boxes*);
 bool checkPuzzleSolution(GameState*);

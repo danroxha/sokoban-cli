@@ -4,7 +4,7 @@
 #include "lib/screen.h"
 #include "lib/keyboard.h"  
 #include <string.h>
-#include "game.h"
+#include "src/game.h"
 
 void menu(Screen, Cursor*, int*);
 void howToPlay();

@@ -59,7 +59,7 @@ bool isdir(const char *name){
 #include <string.h>
 #include "types.h"
 #include "util.h"
-#include "../map/map.h"
+#include "../src/map.h"
 
 void hasIssueInMapsFile(const char*);
 
