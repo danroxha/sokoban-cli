@@ -9,7 +9,7 @@
 int main() {
 
 	Screen screen =  getScreenSize();
-	Cursor cursor = {0, 0};
+	Cursor cursor = {0, 0, '>'};
 	Program program = {true};
 
 	int menuOption = 0;
@@ -61,7 +61,7 @@ int main() {
 		
 		gotoxy(cursor.x, cursor.y);
 		textcolor(IRED);
-		printf(">");
+		printf("%c", cursor.pointer);
 		reset_video();
 
 	}

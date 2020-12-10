@@ -82,7 +82,8 @@ typedef struct screen {
 } Screen;
 
 typedef struct cursor {
-	int x, y;
+  int x, y;
+  char pointer;
 } Cursor;
 
 
