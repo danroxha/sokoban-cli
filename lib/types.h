@@ -41,7 +41,7 @@ typedef struct goals {
   int lenght;
 } Goals;
 
-typedef struct {
+typedef struct boxes{
   Box *list;
   int lenght;
 } Boxes;
@@ -64,7 +64,7 @@ typedef struct gameState {
   int time;
 } GameState;
 
-typedef struct Levels {
+typedef struct levels {
   char **filenames;
   char **paths;
   int total;
