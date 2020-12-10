@@ -89,7 +89,7 @@ void drawObject(Object *object) {
 
 }
 
-void drawIimeBar(GameState *gameState) {
+void drawTimeBar(GameState *gameState) {
 
   Screen screen = getScreenSize();
   

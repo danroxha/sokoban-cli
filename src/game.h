@@ -49,7 +49,7 @@ void game() {
   
   do {
     
-    drawIimeBar(&gameState);
+    drawTimeBar(&gameState);
     drawHelpBar(&gameState);
 
     if (kbhit()) {
