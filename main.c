@@ -8,7 +8,6 @@
 
 int main() {
 
-	Screen screen =  getScreenSize();
 	Cursor cursor = {0, 0, '>'};
 	Program program = {true};
 
@@ -18,12 +17,10 @@ int main() {
 	clear();
 
 	
-	drawMenu(screen, &cursor, &menuOption);
+	drawMenu(&cursor, &menuOption);
 
 	do {
-	  
-	  screen =  getScreenSize();
-		
+	  	
 		if(kbhit()) {
 
 			int key = readch();
@@ -56,7 +53,7 @@ int main() {
 			}
 				
 			clear();
-			drawMenu(screen, &cursor, &menuOption);
+			drawMenu(&cursor, &menuOption);
 		}
 		
 		gotoxy(cursor.x, cursor.y);

@@ -23,69 +23,63 @@ void howToPlay() {
 
 
 
-void drawMenu(Screen screen, Cursor *cursor, int *option) {
+void drawMenu(Cursor *cursor, int *option) {
 
-  int padding  = 1;
-  int height   = 2;
-  bool isContinue = thereIsSavestate("savestate/");
+  Screen screen = getScreenSize();
+  const char* banner[] =  {
+   "\033[31;1m",
+   " ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄   ▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄    ▄ ",
+   "█       █       █   █ █ █       █  ▄    █      █  █  █ █",
+   "█  ▄▄▄▄▄█   ▄   █   █▄█ █   ▄   █ █▄█   █  ▄   █   █▄█ █",
+   "█ █▄▄▄▄▄█  █ █  █      ▄█  █ █  █       █ █▄█  █       █",
+   "█▄▄▄▄▄  █  █▄█  █     █▄█  █▄█  █  ▄   ██      █  ▄    █",
+   " ▄▄▄▄▄█ █       █    ▄  █       █ █▄█   █  ▄   █ █ █   █",
+   "█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄█ █▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄█  █▄▄█",
+   "\033[0;0m",
+   "  ====================================================  ",
+   "                       \033[32;1mC\033[0;0montinue      ",
+   "                       \033[32;1mN\033[0;0mew Game      ",
+   "                       \033[32;1mH\033[0;0mow to play   ",
+   "                       \033[32;1mE\033[0;0mxit          ",
+   "  ====================================================  ",
+
+  };
+
+
+  enum BannerLine {
+    LINE_NINE     = 9,
+    LINE_TEN      = 10,
+    LINE_THIRTEEN = 13,
+  };
+
+  bool isContinue  = thereIsSavestate("savestate/");
+  int centerWidth  = screen.centerWidth - strlen(banner[LINE_NINE]) / 2;
+  int centerHeight = screen.height / 4;
+  int centerBanner = centerWidth;
+  int selection    = 0;
+
+
+  cursor->x = centerWidth + strlen(banner[LINE_NINE]) / 2.6;
+  if(cursor->y <  centerHeight + LINE_TEN)
+    cursor->y = centerHeight + LINE_THIRTEEN - (int) !isContinue;
+  if(cursor->y > centerHeight + LINE_THIRTEEN - (int) !isContinue)
+    cursor->y = centerHeight + LINE_TEN;
+
+  selection = cursor->y - centerHeight - LINE_NINE + (int)!isContinue;
   
-  const char* line = "==================================================";
-  const char* banner = "\
-    ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄   ▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄    ▄ \r\n\
-   █       █       █   █ █ █       █  ▄    █      █  █  █ █\r\n\
-   █  ▄▄▄▄▄█   ▄   █   █▄█ █   ▄   █ █▄█   █  ▄   █   █▄█ █\r\n\
-   █ █▄▄▄▄▄█  █ █  █      ▄█  █ █  █       █ █▄█  █       █\r\n\
-   █▄▄▄▄▄  █  █▄█  █     █▄█  █▄█  █  ▄   ██      █  ▄    █\r\n\
-    ▄▄▄▄▄█ █       █    ▄  █       █ █▄█   █  ▄   █ █ █   █\r\n\
-   █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄█ █▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█▄█  █▄▄█\r\n\
-  ";
-
-
-  int centerWidth     = screen.centerWidth - strlen(line) / 2;
-  int centerHeight    = screen.height / 4;
-  int centerSelection = centerWidth + strlen(line) / 2.5;
-  int centerBanner    = centerWidth - 6 ;
-  int selection       = 0;
-
-
-  cursor->x = centerSelection - 2;
-  
-  if(cursor->y <  centerHeight + 11) cursor->y = centerHeight + 15 - ((isContinue)? padding : height);
-  if(cursor->y >  centerHeight + 15 - ((isContinue)? padding : height)) cursor->y = centerHeight + 11;
-
-  selection = cursor->y - centerHeight - 10;
-  
-  textcolor(IRED);
-
-  int h = centerHeight;
-  gotoxy(centerBanner, h + 1);
-  
-  for(int i = 0; i < strlen(banner); i++){
-    if(banner[i] == '\n'){
-      h++;
-      gotoxy(centerBanner, h);
+  int hidenOption = 0;
+  int size = sizeof(banner) / sizeof(char*);
+  for(int i = 0; i < size; i++) {
+    if(!isContinue && i == LINE_TEN) {
+      hidenOption = 1;
+      continue;
     }
 
-    printf("%c", banner[i]);
+    gotoxy(centerBanner, centerHeight + i - hidenOption); 
+    printf("%s", banner[i]);
   }
-  
-  reset_video();
-  gotoxy(centerWidth,8 + height + centerHeight);  printf("%s", line);
-
-  if(isContinue){
-    padding = 0;
-    gotoxy(centerSelection, 9 + height + centerHeight);  printf("\033[32;1mC\033[0;0montinue "); 
-  }else {
-    selection++;
-  }
-
+ 
   *option = selection;
-  
-  gotoxy(centerSelection, 10 - padding + height + centerHeight); printf("\033[32;1mN\033[0;0mew Game ");
-  gotoxy(centerSelection, 11 - padding + height + centerHeight); printf("\033[32;1mH\033[0;0mow to play ");
-  gotoxy(centerSelection, 12 - padding + height + centerHeight); printf("\033[32;1mE\033[0;0mxit     ");
-  gotoxy(centerWidth, 13 - padding + height + centerHeight); printf("%s", line);
-
 }
 
 #endif // __MENU_SOKOBAN_H__
