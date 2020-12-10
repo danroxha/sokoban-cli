@@ -162,6 +162,7 @@ void destroy(void *memory, const char* type) {
 
     if(goals->list != NULL) free(goals->list);
   }
+  // FREE GAMESTATE
   else if(!strcmp(type, "GameState")) {
     GameState *gameState = (GameState*) memory;
 
