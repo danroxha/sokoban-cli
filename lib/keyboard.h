@@ -21,7 +21,9 @@ enum Keys {
   KEY_ARROW_LEFT  = 68,
   KEY_ARROW_RIGHT = 67,
   KEY_R_U         = 82,  // KEY R UPPERCASE
-  KEY_R_L         = 114 // KEY R LOWERCASE
+  KEY_H_U         = 72,  // KEY H UPPERCASE
+  KEY_H_L         = 104, // KEY H UPPERCASE
+  KEY_R_L         = 114  // KEY R LOWERCASE
 };
 
 void init_keyboard()
