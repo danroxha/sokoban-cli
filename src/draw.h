@@ -3,19 +3,31 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "types.h"
-#include "screen.h"
-#include "util.h"
+#include "../lib/types.h"
+#include "../lib/screen.h"
+#include "../lib/util.h"
 
+void draw(GameState*);
 void drawMap(GameState*);
 void drawBoxes(Boxes*);
+void drawGoals(Goals*);
 void drawObject(Object*, char*, bool);
 void drawIimeBar(GameState*);
-void drawHelpBar(GameState *gameState);
+void drawHelpBar(GameState*);
 void drawBannerHowToPlay(void);
 
 static int centerWidth = 0;
 static int centerHeight = 0;
+
+void draw(GameState *gameState){
+
+  drawHelpBar(gameState);
+  drawMap(gameState);
+  drawGoals(gameState->goals);
+  drawBoxes(gameState->boxes);
+  drawObject(gameState->character, BGC_IYELLOW, false);
+
+}
 
 void drawBoxes(Boxes *boxes) {
     
@@ -171,4 +183,6 @@ void drawBannerHowToPlay(void) {
   reset_video();
 
 }
+
+
 #endif //__DRAW_SOKOBAN_H__

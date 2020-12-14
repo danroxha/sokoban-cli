@@ -1,11 +1,8 @@
 #ifndef __GAME_SOKOBAN_INIT_H__
 #define __GAME_SOKOBAN_INIT_H__
 
-#include "../lib/sokoban.h"
-#include "setting.h"
-#include "logic.h"
-#include "move.h"
-#include "savestate.h"
+#include "sokoban.h"
+
 
 //#define __DEBUGGER_BUILD_MAP_TEST__
 
@@ -40,10 +37,7 @@ void game() {
 
   clear();
 
-  drawMap(&gameState);
-  drawGoals(&goals);
-  drawObject(&character, BGC_IYELLOW, false);
-  drawBoxes(&boxes);
+  draw(&gameState);
   gotoxy(character.x, character.y);
 
 
@@ -53,8 +47,7 @@ void game() {
   do {
     
     drawTimeBar(&gameState);
-    drawHelpBar(&gameState);
-
+  
     if (kbhit()) {
 
       key = readch();
@@ -75,10 +68,8 @@ void game() {
         resetLevel(&gameState, &savestate, &world);
       
       clear();
-      drawMap(&gameState);
-      drawGoals(&goals);
-      drawBoxes(&boxes);
-      drawObject(&character, BGC_IYELLOW, false);
+      draw(&gameState);
+
     }
 
   } while (key != KEY_ENTER);
