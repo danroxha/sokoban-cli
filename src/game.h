@@ -41,6 +41,9 @@ void game() {
   clear();
 
   drawMap(&gameState);
+  drawGoals(&goals);
+  drawObject(&character, BGC_IYELLOW, false);
+  drawBoxes(&boxes);
   gotoxy(character.x, character.y);
 
 
@@ -73,11 +76,10 @@ void game() {
       
       clear();
       drawMap(&gameState);
-      
+      drawGoals(&goals);
+      drawBoxes(&boxes);
+      drawObject(&character, BGC_IYELLOW, false);
     }
-
-    drawObject(&character);
-    drawBoxes(&boxes);
 
   } while (key != KEY_ENTER);
 

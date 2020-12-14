@@ -9,7 +9,7 @@
 
 void drawMap(GameState*);
 void drawBoxes(Boxes*);
-void drawObject(Object*);
+void drawObject(Object*, char*, bool);
 void drawIimeBar(GameState*);
 void drawHelpBar(GameState *gameState);
 void drawBannerHowToPlay(void);
@@ -28,8 +28,15 @@ void drawBoxes(Boxes *boxes) {
     else 
       textcolor(BGC_IRED);
   
-    printf("%c", boxes->list[i].body);
+    printf(" ");
     reset_video();
+  }
+}
+
+void drawGoals(Goals *goals) {
+  
+  for(int i = 0; i < goals->lenght; i++) {
+   drawObject(&goals->list[i], IGREEN, true);
   }
 }
 
@@ -60,31 +67,31 @@ void drawMap(GameState *gameState) {
     for(int x = 0; x < gameState->currrentMap.width; x++) {
       
       gotoxy(centerWidth + x + 1, centerHeight + y + 1);
-    
-      if (gameState->currrentMap.field[y][x] == TARGET) {
-        textcolor(IGREEN);
-        printf("%c", gameState->currrentMap.field[y][x]);
-        reset_video();
-      }
+
       // DRAW WALL
-      else if (gameState->currrentMap.field[y][x] == WALL) {
+      if (gameState->currrentMap.field[y][x] == WALL) {
         textcolor(BGC_CYAN);
-        printf("%c", gameState->currrentMap.field[y][x]);
+        printf(" ");
         reset_video();
       }
       // DRAW ANY
       else {
-        printf("%c", gameState->currrentMap.field[y][x]);
+        printf(" ");
       }
     }
   }
 }
 
-void drawObject(Object *object) {
+void drawObject(Object *object,char *color, bool enableChar) {
   
   gotoxy(centerWidth + object->x, centerHeight + object->y);
-  textcolor(IYELLOW);
-  printf("%c", object->body);
+  textcolor(color);
+  
+  if(enableChar)
+    printf("%c", object->body);
+  else
+    printf(" ");
+
   reset_video();
 
 }
