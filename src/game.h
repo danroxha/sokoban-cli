@@ -38,11 +38,8 @@ void game() {
   clear();
 
   draw(&gameState);
-  gotoxy(character.x, character.y);
-
 
   int key;
- 
   
   do {
     
