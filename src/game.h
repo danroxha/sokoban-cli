@@ -53,6 +53,9 @@ void game() {
       key = readch();
       if (key == CTRL_C)
         break;
+      
+      if(key == KEY_H_L || key == KEY_H_U)
+        howToPlay();
 
       moveDoll(&gameState, &character, key);
       moveBoxes(&gameState, &boxes, &character, key);

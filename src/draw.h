@@ -14,7 +14,9 @@ void drawGoals(Goals*);
 void drawObject(Object*, char*, bool);
 void drawIimeBar(GameState*);
 void drawHelpBar(GameState*);
+void drawCaption(GameState*);
 void drawBannerHowToPlay(void);
+
 
 static int centerWidth = 0;
 static int centerHeight = 0;
@@ -22,6 +24,7 @@ static int centerHeight = 0;
 void draw(GameState *gameState){
 
   drawHelpBar(gameState);
+  drawCaption(gameState);
   drawMap(gameState);
   drawGoals(gameState->goals);
   drawBoxes(gameState->boxes);
@@ -48,7 +51,7 @@ void drawBoxes(Boxes *boxes) {
 void drawGoals(Goals *goals) {
   
   for(int i = 0; i < goals->lenght; i++) {
-   drawObject(&goals->list[i], IGREEN, true);
+   drawObject(&goals->list[i], "\033[32;1m\033[32;5m", true);
   }
 }
 
@@ -165,7 +168,7 @@ void drawBannerHowToPlay(void) {
     "           \033[34;1mArrows\033[0m           \033[34;1mRestart\033[0m",
     "                                                ",
     "                                                ",
-    "            \033[0;34;5mPress ENTER to return\033[0m",
+    "          \033[0;34;5mPress ENTER or H to return\033[0m",
   };
 
   const float MARGIN_X = 6.0;
@@ -184,5 +187,22 @@ void drawBannerHowToPlay(void) {
 
 }
 
+void drawCaption(GameState *gameState) {
 
+  Screen screen = getScreenSize();
+
+  const char* caption[] = {
+    "\033[43m \033[0;0m - Character",
+    "\033[41m \033[0;0m - Boxes    ",
+    "\033[32;1m?\033[0;0m - Goals  ",
+    "\033[31;1mH\033[0;0m - Tutorial  ",
+  };
+
+  
+  int size = sizeof(caption) / sizeof(char*);
+  for(int i = 0; i < size; i++) {
+    gotoxy(screen.centerWidth + gameState->currrentMap.width , screen.centerHeight + i);
+    printf("%s", caption[i]);
+  }
+}
 #endif //__DRAW_SOKOBAN_H__

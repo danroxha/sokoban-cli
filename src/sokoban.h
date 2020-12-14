@@ -13,6 +13,7 @@
 #include "setting.h"
 #include "logic.h"
 #include "move.h"
+#include "menu.h"
 #include "savestate.h"
 
 #endif // __SOKOBAN_SOKOBAN_H__

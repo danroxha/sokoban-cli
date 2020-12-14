@@ -18,7 +18,7 @@ void howToPlay() {
     }
     drawBannerHowToPlay();
   }
-  while(key != KEY_ENTER);
+  while(key != KEY_ENTER && key != KEY_H_U && key != KEY_H_L);
 }
 
 
