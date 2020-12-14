@@ -5,11 +5,14 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include "keyboard.h"
-#include "screen.h"
-#include "types.h"
+#include "../lib/keyboard.h"
+#include "../lib/screen.h"
+#include "../lib/util.h"
+#include "../lib/types.h"
 #include "draw.h"
-#include "util.h"
-
+#include "setting.h"
+#include "logic.h"
+#include "move.h"
+#include "savestate.h"
 
 #endif // __SOKOBAN_SOKOBAN_H__
