@@ -115,7 +115,6 @@ void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
   configBoxes(gameState->boxes, gameState);
   configGoals(gameState->goals, gameState);
 
-  gameState->time = time(0);
 }
 
 void resetLevel(GameState *gameState, SaveState *savestate, World *world) {
@@ -127,7 +126,6 @@ void resetLevel(GameState *gameState, SaveState *savestate, World *world) {
   configBoxes(gameState->boxes, gameState);
   configGoals(gameState->goals, gameState);
 
-  gameState->time = time(0);
 }
 
 #endif // __SETTING_SOKOBAN_H__
