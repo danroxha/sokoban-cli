@@ -56,11 +56,23 @@ void game() {
     if (kbhit()) {
 
       key = readch();
-      if (key == CTRL_C)
-        break;
-      
-      if(key == KEY_H_L || key == KEY_H_U)
-        howToPlay();
+
+      switch(key) {
+        case CTRL_C: {
+          gameState.running = false;
+          break;
+        }
+        case KEY_H_L:
+        case KEY_H_U: {
+          howToPlay();
+          break;
+        }
+        case KEY_R_L:
+        case KEY_R_U: {
+          resetLevel(&gameState, &savestate, &world);  
+        }
+      }
+        
 
       moveDoll(&gameState, &character, key);
       moveBoxes(&gameState, &boxes, &character, key);
@@ -71,9 +83,6 @@ void game() {
       
       if(gameState.win)
         nextLevel(&gameState, &savestate, &world);
-
-      if(key == KEY_R_U || key == KEY_R_L)
-        resetLevel(&gameState, &savestate, &world);
       
       clear();
       draw(&gameState);
