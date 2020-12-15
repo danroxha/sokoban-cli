@@ -101,11 +101,14 @@ void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
   }
 
   if(world->total <= savestate->world) {
+    drawWinMessage();
     savestate->world = 0;
     savestate->level = 0;
   }
+  else {
+    drawNextLevelMessage();
+  }
   
-
   defineSaveState(*savestate);
   
   gameState->currrentMap = loadMap(world->levels[savestate->world].paths[savestate->level]);

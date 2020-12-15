@@ -16,6 +16,7 @@ void drawIimeBar(GameState*);
 void drawHelpBar(GameState*);
 void drawCaption(GameState*);
 void drawBannerHowToPlay(void);
+void drawWinMessage(void);
 
 
 static int centerWidth = 0;
@@ -205,4 +206,87 @@ void drawCaption(GameState *gameState) {
     printf("%s", caption[i]);
   }
 }
+
+void drawWinMessage(void) {
+  const char* message[] = {
+    "                        ",
+    "      █░█░█ █ █▄░█      ",
+    "      ▀▄▀▄▀ █ █░▀█      ",
+    "                        ",
+    "      ___________       ",
+    "     '._==_==_=_.'      ",
+    "     .-\\:      /-.     ",
+    "    | (|:.     |) |     ",
+    "     '-|:.     |-'      ",
+    "       \\::.    /       ",
+    "        '::. .'         ",
+    "          ) (           ",
+    "        _.' '._         ",
+    "       `\"\"\"\"\"\"\"` "
+  };
+  
+  Screen screen = getScreenSize();
+  const float MARGIN_X = 2.0;
+  const float MARGIN_Y = 4.0;
+
+  int size =  (int)sizeof(message) / sizeof(char*);
+  int verticalAlign   = screen.centerWidth - strlen(message[0]) / MARGIN_X;
+  int horizontalAlign = screen.height / MARGIN_Y;
+
+  const int seconds = 3;
+  int times = time(0);
+  
+  clear();
+  textcolor(IYELLOW);
+  do {
+    for(int i = 0; i < size; i++) {
+      gotoxy(verticalAlign, horizontalAlign + i);
+      printf("%s", message[i]);
+    }
+
+  }while(times + seconds > time(0));
+
+  reset_video();
+
+}
+
+void drawNextLevelMessage(void) {
+  
+  
+  Screen screen = getScreenSize();
+  
+  
+  const char* message[] = {
+   "  █▄░█ █▀▀ ▀▄▀ ▀█▀ ",
+   "  █░▀█ ██▄ █░█ ░█░ ",
+   "                   ",
+   "█░░ █▀▀ █░█ █▀▀ █░░",
+   "█▄▄ ██▄ ▀▄▀ ██▄ █▄▄",
+  };
+  
+  
+  const float MARGIN_X = 5.0;
+  const float MARGIN_Y = 2.5;
+
+  int size =  (int)sizeof(message) / sizeof(char*);
+  int verticalAlign   = screen.centerWidth - strlen(message[0]) / MARGIN_X;
+  int horizontalAlign = screen.height / MARGIN_Y;
+
+  const int seconds = 3;
+  int times = time(0);
+  
+  clear();
+  textcolor(ICYAN);
+
+  do {
+    for(int i = 0; i < size; i++) {
+      gotoxy(verticalAlign, horizontalAlign + i);
+      printf("%s", message[i]);
+    }
+
+  }while(times + seconds > time(0));
+
+  reset_video();
+}
+
 #endif //__DRAW_SOKOBAN_H__
