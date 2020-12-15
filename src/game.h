@@ -27,6 +27,13 @@ void game() {
   SaveState savestate = loadSaveState("savestate/");
   World world = loadWorlds("world/");
 
+  bool isCorruptedSavestate = savestate.world > world.total || savestate.level > world.levels[savestate.world].total;
+  
+  if(isCorruptedSavestate) {
+    removeSaveState("savestate/");
+    savestate = loadSaveState("savestate/");
+  }
+
   gameState.currrentMap = loadMap(world.levels[savestate.world].paths[savestate.level]);
 
   
