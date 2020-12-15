@@ -11,9 +11,11 @@ Atividade da disciplina de linguagem de programação I.
 
 <p align="center" display="flex">
   <img width="60%" src="screenshot/sokoban-0.png" />
-  <img width="60%" src="screenshot/sokoban-1.gif" />
-  <img width="60%" src="screenshot/sokoban-2.gif" />
+  <img width="60%" src="screenshot/sokoban-1.png" />
+  <img width="60%" src="screenshot/sokoban-2.png" />
   <img width="60%" src="screenshot/sokoban-3.png" />
+  <img width="60%" src="screenshot/sokoban-4.png" />
+  <img width="60%" src="screenshot/sokoban-5.png" />
 </p>
 
 ## &#x1F477;&#x1F3FF;&#x200D;&#x2642;&#xFE0F; Start
