@@ -18,11 +18,25 @@ void sort(char** arr, int n) {
 #define __UTIL_ERROR_H__
 
 #include <errno.h>
+#include "screen.h"
+
+void throwMessage(const char*, char*);
+
 
 #define try bool __HadError=false;
 #define catch(x) ExitJmp:if(__HadError)
 #define throw(x) __HadError=true;goto ExitJmp;
 
+
+void throwMessage(const char* message, char* color) {
+  
+  showcursor();
+  textcolor(color);
+  reset_video();
+  fprintf(stderr, "\r%s", message);
+  close_keyboard();
+  exit(1);
+}
 
 #endif // __UTIL_ERROR_H__
 
