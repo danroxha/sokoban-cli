@@ -23,6 +23,7 @@ void game() {
   
   gameState.boxes = &boxes;
   gameState.character = &character;
+  gameState.running = true;
 
   SaveState savestate = loadSaveState("savestate/");
   World world = loadWorlds("world/");
@@ -79,7 +80,7 @@ void game() {
 
     }
 
-  } while (key != KEY_ENTER);
+  } while (key != KEY_ENTER && gameState.running);
 
   clear();
 

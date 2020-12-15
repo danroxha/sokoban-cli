@@ -59,6 +59,7 @@ typedef struct gameState {
   Goals *goals;
   Map currrentMap;
   Object *character;
+  bool running;
   bool win;
   int level;
   int time;

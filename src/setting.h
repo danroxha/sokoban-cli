@@ -104,6 +104,7 @@ void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
     drawWinMessage();
     savestate->world = 0;
     savestate->level = 0;
+    gameState->running = false;
   }
   else {
     drawNextLevelMessage();
