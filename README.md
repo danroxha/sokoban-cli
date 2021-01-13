@@ -7,7 +7,7 @@ Sokoban foi criado em 1981 por Hiroyuki Imabayashi. O primeiro jogo comercial fo
 
 Atividade da disciplina de linguagem de programação I.
 
-## :tv: Demo
+## :tv: Screenshot
 
 <p align="center" display="flex">
   <img width="300px" src="screenshot/sokoban-0.png" />
