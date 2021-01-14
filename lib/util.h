@@ -8,6 +8,14 @@ static int compare(const void* a, const void* b)  {
   return strcmp(*(const char**)a, *(const char**)b); 
 } 
 
+static int compareLevels(const void* a, const void* b)  {
+  return strcmp((*(Levels*)a).paths[0] , (*(Levels*)b).paths[0]);
+} 
+
+void sortWorld(Levels *levels, int n){  
+  qsort(levels, n, sizeof(Levels), compareLevels);
+}
+
 void sort(char** arr, int n) { 
   qsort(arr, n, sizeof(const char*), compare); 
 }

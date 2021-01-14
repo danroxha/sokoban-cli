@@ -158,7 +158,9 @@ World loadWorlds(const char* dirname) {
     destroy(&levels, "Levels");
     free(path);
   }
-
+  
+  sortWorld(world.levels, world.total);
+  
   return world;
 }
 
