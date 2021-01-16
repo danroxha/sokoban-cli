@@ -20,6 +20,25 @@ Atividade da disciplina de linguagem de programação I.
 
 ## &#x1F477;&#x1F3FF;&#x200D;&#x2642;&#xFE0F; Start
 
+#### Ferramentas
+* :pushpin: *![git@2.+](http://img.shields.io/badge/Git@2.+-%230077B6.svg?&style=flat-square&logo=git&logoColor=white&color=3f2f00&labelColor=e94e31)*
+* :pushpin: *![make@4.+](https://img.shields.io/badge/Make@2.+-%230077B6.svg?&style=flat-square&logo=cmake&logoColor=white&color=000000&labelColor=064F8C)*
+* :pushpin: *![gcc@10.+](https://img.shields.io/badge/GCC@10.+-%230077B6.svg?&style=flat-square&logo=gnu&logoColor=white&color=4EAA25&labelColor=A42E2B)*
+
+#### Repositório
+
+```sh 
+git clone https://github.com/dannRocha/sokoban-cli.git
+```
+
+#### :cd: Inicialização
+No diretório do repositório, abra o terminal e rode o comando:
+```sh
+make
+```
+#### :warning: Observação
+O jogo é uma aplicação de linha de comando, então é necessário inicializar a aplicação com um emulador de console (terminal)
+
 ## Referência
 
 - WIKIPEDIA, ***Sokoban***. Disponível em: <<https://en.wikipedia.org/wiki/Sokoban>>. Acesso em 29 novembro de 2020.
