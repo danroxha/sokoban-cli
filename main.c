@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "lib/keyboard.h"
 #include "lib/types.h"
 #include "lib/screen.h"
 #include "src/game.h"
@@ -13,6 +14,7 @@ int main() {
 
 	int menuOption = 0;
 	
+	init_keyboard();
 	nocursor();
 	clear();
 
@@ -64,8 +66,9 @@ int main() {
 	}
 	while(program.running);
 	
-	clear();
+	close_keyboard();
 	showcursor();
+	clear();
 	
 	return 0;
 }
