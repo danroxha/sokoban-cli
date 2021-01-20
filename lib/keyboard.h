@@ -9,7 +9,7 @@
 #include <time.h>
 #include <stdbool.h>
 
-static struct termios initial_input, new_input;
+static struct termios initial_settings, handle_input;
 static int peek_character = -1;
 
 enum Keys {
@@ -28,12 +28,12 @@ enum Keys {
 
 void init_keyboard()
 {
-    tcgetattr(0, &initial_input);
+    tcgetattr(0, &initial_settings);
 }
 
 void close_keyboard()
 {
-    tcsetattr(0, TCSANOW, &initial_input);
+    tcsetattr(0, TCSANOW, &initial_settings);
 }
 
 int kbhit()
@@ -42,11 +42,11 @@ int kbhit()
     int nread;
 
     if (peek_character != -1) return 1;
-    new_input.c_cc[VMIN]=0;
-    tcsetattr(0, TCSANOW, &new_input);
+    handle_input.c_cc[VMIN]=0;
+    tcsetattr(0, TCSANOW, &handle_input);
     nread = read(0,&ch,1);
-    new_input.c_cc[VMIN]=1;
-    tcsetattr(0, TCSANOW, &new_input);
+    handle_input.c_cc[VMIN]=1;
+    tcsetattr(0, TCSANOW, &handle_input);
     if(nread == 1)
     {
         peek_character = ch;
