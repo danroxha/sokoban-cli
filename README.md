@@ -1,3 +1,8 @@
+![License](https://img.shields.io/github/license/dannrocha/sokoban-cli)
+![Repo size](https://img.shields.io/github/repo-size/dannrocha/sokoban-cli)
+![Last commit](https://img.shields.io/github/last-commit/dannRocha/sokoban-cli)
+![Dev](https://img.shields.io/badge/daniel%20rocha-dev-green)
+
 # Sokoban CLI
 
 Segundo o Wikipedia, Sokoban (倉庫 番, Sōko-ban ) é um gênero de videogame de quebra - cabeça no qual o jogador empurra engradados ou caixas em um depósito , tentando levá-los para locais de armazenamento.
