@@ -9,8 +9,8 @@
 
 int main() {
 
-	Cursor cursor = {0, 0, '>'};
-	Program program = {true};
+	Cursor cursor = {.x=0, .y=0, .pointer='>'};
+	Program program = {.running=true};
 
 	int menuOption = 0;
 	

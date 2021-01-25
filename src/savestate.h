@@ -20,7 +20,7 @@ bool thereIsSavestate(const char* dirname);
 
 SaveState loadSaveState(const char* dirname) {
 
-	SaveState savestate = {0, 0, NULL};
+	SaveState savestate = {.world=0, .level=0, .path=NULL};
 	const char* filename = "savestate.txt";
 	const int mode = 0777;
 	savestate.path = (char*) calloc(strlen(dirname) + strlen(filename), sizeof(char));
@@ -68,10 +68,10 @@ void defineSaveState(SaveState savestate) {
 	FILE* fileopen = fopen(savestate.path, "w");
 
 	if(fileopen == NULL) {
-    textcolor(IRED);
+    	textcolor(IRED);
 		fprintf(stderr, "Error: Nao foi possível definir o arquivo de savestate em: %s", savestate.path);
 		reset_video();
-    exit(1);
+    	exit(1);
 	}
 	
 	fprintf(fileopen, "%d %d", savestate.world, savestate.level);
@@ -87,9 +87,9 @@ void removeSaveState(const char* dirname) {
 	if(rmdir(dirname)) {
 		clear();
 		showcursor();
-    textcolor(IRED);
+    	textcolor(IRED);
 		fprintf(stderr, "Error: Não foi possivel remover o savestate de: %s", dirname);
-    reset_video();
+    	reset_video();
 		exit(1);
 	}
 }

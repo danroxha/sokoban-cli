@@ -17,7 +17,7 @@ World loadWorlds(const char*);
 Map loadMap(const char* filename) {
   const int SIZE = 256;
   
-  Map map = {NULL, 0, 0, {NULL, false, 0}};
+  Map map = {.width=0, .height=0, {.hasError=false, .size=0}};
 
   FILE *filemap = fopen(filename, "r");
   char buff[SIZE];
@@ -79,7 +79,7 @@ Map parseFilemap(Map map) {
 
 Levels loadLevels(const char* dirname) {
   
-  Levels levels = {NULL, NULL, 0};
+  Levels levels = {.filenames=NULL, .paths=NULL, .total=0};
   struct dirent *list;
   
   DIR *diretory = opendir(dirname);
@@ -127,7 +127,7 @@ Levels loadLevels(const char* dirname) {
 
 World loadWorlds(const char* dirname) {
   
-  World world = {NULL, 0};
+  World world = {.levels=NULL, .total=0};
   struct dirent *list;
   DIR *diretory = opendir(dirname);
 
@@ -138,7 +138,7 @@ World loadWorlds(const char* dirname) {
 
   while((list = readdir(diretory)) != NULL) {
     
-    Levels levels = {NULL, NULL, 0};
+    Levels levels = {.filenames=NULL, .paths=NULL, .total=0};
 
     char *path = calloc(strlen(dirname) + strlen(list->d_name) + 1, sizeof(char));
     strcat(path, dirname);
