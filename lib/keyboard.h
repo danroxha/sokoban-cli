@@ -28,46 +28,46 @@ enum Keys {
 
 void init_keyboard()
 {
-    tcgetattr(0, &initial_settings);
+  tcgetattr(0, &initial_settings);
 }
 
 void close_keyboard()
 {
-    tcsetattr(0, TCSANOW, &initial_settings);
+  tcsetattr(0, TCSANOW, &initial_settings);
 }
 
 int kbhit()
 {
-    unsigned char ch;
-    int nread;
+  unsigned char ch;
+  int nread;
 
-    if (peek_character != -1) return 1;
-    handle_input.c_cc[VMIN]=0;
-    tcsetattr(0, TCSANOW, &handle_input);
-    nread = read(0,&ch,1);
-    handle_input.c_cc[VMIN]=1;
-    tcsetattr(0, TCSANOW, &handle_input);
-    if(nread == 1)
-    {
-        peek_character = ch;
-        return 1;
-    }
-    return 0;
+  if (peek_character != -1) return 1;
+  handle_input.c_cc[VMIN]=0;
+  tcsetattr(0, TCSANOW, &handle_input);
+  nread = read(0,&ch,1);
+  handle_input.c_cc[VMIN]=1;
+  tcsetattr(0, TCSANOW, &handle_input);
+  if(nread == 1)
+  {
+    peek_character = ch;
+    return 1;
+  }
+  return 0;
 }
 
 int readch()
 {
-   char ch;
+  char ch;
 
-    if(peek_character != -1)
-    {
-        ch = peek_character;
-        peek_character = -1;
-        return ch;
-    }
-    
-    read(0,&ch,1);
+  if(peek_character != -1)
+  {
+    ch = peek_character;
+    peek_character = -1;
     return ch;
+  }
+  
+  read(0,&ch,1);
+  return ch;
 }
 
 #endif //__KEYBOARD_H__

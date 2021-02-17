@@ -9,76 +9,76 @@
 
 int main() {
 
-	Cursor cursor = {.x=0, .y=0, .pointer='>'};
-	Program program = {.running=true};
-	Screen statusScreenOld = getScreenSize();
+  Cursor cursor = {.x=0, .y=0, .pointer='>'};
+  Program program = {.running=true};
+  Screen statusScreenOld = getScreenSize();
 
-	int menuOption = 0;
-	
-	init_keyboard();
-	nocursor();
-	clear();
-	
+  int menuOption = 0;
+  
+  init_keyboard();
+  nocursor();
+  clear();
+  
 
-	
-	drawMenu(&cursor, &menuOption);
+  
+  drawMenu(&cursor, &menuOption);
 
-	do {
+  do {
 
-		Screen statusScreenNew = getScreenSize();
+    Screen statusScreenNew = getScreenSize();
 
-	  	if(diffScreen(&statusScreenOld, &statusScreenNew)) {
-	  		statusScreenOld = statusScreenNew;
-	  		clear();
-	  		drawMenu(&cursor, &menuOption);
-	  	}
-	  	
-		if(kbhit()) {
+      if(diffScreen(&statusScreenOld, &statusScreenNew)) {
+        statusScreenOld = statusScreenNew;
+        clear();
+        drawMenu(&cursor, &menuOption);
+      }
+      
+    if(kbhit()) {
 
-			int key = readch();
+      int key = readch();
 
-			if(key == CTRL_C)
-				break;
+      if(key == CTRL_C)
+        break;
 
-			if(key == KEY_ARROW_UP) cursor.y--;
-			if(key == KEY_ARROW_DOWN) cursor.y++;
-			if(key == KEY_ENTER) {
-				switch(menuOption){
-					case MENU_CONTINUE: {
-						game();
-						break;
-					}
-					case MENU_NEW_GAME: {
-						removeSaveState("savestate/");
-						game();
-						break;
-					}
-					case MENU_HOW_TO_PLAY: {
-						howToPlay();
-						break;
-					}
-					case MENU_EXIT: {
-						program.running = false;
-						break;
-					}
-				}	
-			}
-				
-			drawMenu(&cursor, &menuOption);
-		}
-		
-		gotoxy(cursor.x, cursor.y);
-		textcolor(IRED);
-		printf("%c", cursor.pointer);
-		reset_video();
+      if(key == KEY_ARROW_UP) cursor.y--;
+      if(key == KEY_ARROW_DOWN) cursor.y++;
+      if(key == KEY_ENTER) {
+        switch(menuOption){
+          case MENU_CONTINUE: {
+            game();
+            break;
+          }
+          case MENU_NEW_GAME: {
+            removeSaveState("savestate/");
+            game();
+            break;
+          }
+          case MENU_HOW_TO_PLAY: {
+            howToPlay();
+            break;
+          }
+          case MENU_EXIT: {
+            program.running = false;
+            break;
+          }
+        }	
+      }
+        
+      drawMenu(&cursor, &menuOption);
+    }
+    
+    gotoxy(cursor.x, cursor.y);
+    textcolor(IRED);
+    printf("%c", cursor.pointer);
+    reset_video();
 
-	}
-	while(program.running);
-	
-	close_keyboard();
-	showcursor();
-	clear();
-	
-	return 0;
+  }
+  while(program.running);
+  
+  close_keyboard();
+  showcursor();
+  clear();
+  
+  return 0;
 }
 
