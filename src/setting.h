@@ -16,8 +16,9 @@ void configGameState(GameState*);
 void configCharacter(Object *character, GameState *gameState) {
   
   character->body = DOLL;
-
-  for (int y = 0; y < gameState->currrentMap.height; y++) 
+  character->redraw = true;
+ 
+  for (int y = 0; y < gameState->currrentMap.height; y++)  {
     for (int x = 0; x < gameState->currrentMap.width; x++) {
       if (gameState->currrentMap.field[y][x] == DOLL) {
         character->x = x + 1;
@@ -26,6 +27,9 @@ void configCharacter(Object *character, GameState *gameState) {
         break;
       }
     }
+  }
+  character->sx = character->x;
+  character->sy = character->y;
 }
 
 void configBoxes(Boxes *boxes, GameState *gameState) {
@@ -46,6 +50,7 @@ void configBoxes(Boxes *boxes, GameState *gameState) {
     boxes->list[i].body = BOX;
     boxes->list[i].enable = false;
     boxes->list[i].id = rand();
+    boxes->list[i].redraw = true;
   }
 
   int index = 0;
@@ -75,7 +80,7 @@ void configGoals(Goals *goals, GameState *gameState) {
       if(gameState->currrentMap.field[y][x] == TARGET) {
         goals->lenght++;
         goals->list = (Object*) realloc(goals->list, goals->lenght * sizeof(Object));
-        
+        goals->list[goals->lenght - 1].redraw = true;
         goals->list[goals->lenght - 1].body = TARGET;
         goals->list[goals->lenght - 1].x = x + 1;
         goals->list[goals->lenght - 1].y = y + 1;
@@ -88,6 +93,7 @@ void configGoals(Goals *goals, GameState *gameState) {
 
 void configGameState(GameState *gameState) {
   gameState->win = false;
+  gameState->forceDraw = true;
   gameState->time = time(0);
 }
 

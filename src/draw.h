@@ -9,37 +9,50 @@
 
 void draw(GameState*);
 void drawMap(GameState*);
-void drawBoxes(Boxes*);
-void drawGoals(Goals*);
+void drawBoxes(GameState*);
+void drawGoals(GameState*);
 void drawObject(Object*, char*, bool);
 void drawIimeBar(GameState*);
 void drawHelpBar(GameState*);
 void drawCaption(GameState*);
+void drawCharacter(GameState *);
 void drawBannerHowToPlay(void);
 void drawWinMessage(void);
-
+void clearShadow(Object *);
 
 static int centerWidth = 0;
 static int centerHeight = 0;
 
-void draw(GameState *gameState){
-
+void draw(GameState *gameState) { 
+  clearShadow(gameState->character);
   drawHelpBar(gameState);
   drawCaption(gameState);
   drawMap(gameState);
-  drawGoals(gameState->goals);
-  drawBoxes(gameState->boxes);
-  drawObject(gameState->character, BGC_IYELLOW, false);
+  drawGoals(gameState);
+  drawBoxes(gameState);
+  drawCharacter(gameState);
 
+  gameState->forceDraw = false;
 }
 
-void drawBoxes(Boxes *boxes) {
+void drawCharacter(GameState *gameState) {
+    Object character = *gameState->character;
+    bool differentFromTheShadow = character.x != character.sx || character.y != character.sy;
     
-  for(int i = 0; i < boxes->lenght; i++) {
+    if(differentFromTheShadow || gameState->forceDraw) {
+        drawObject(gameState->character, BGC_IYELLOW, false);
+    }
+      
+}
+
+void drawBoxes(GameState *gameState) {
     
-    gotoxy(centerWidth + boxes->list[i].x, centerHeight + boxes->list[i].y);
+  for(int i = 0; i < gameState->boxes->lenght; i++) {
+    if(!gameState->boxes->list[i].redraw && !gameState->forceDraw) continue;
+    gameState->boxes->list[i].redraw = false;
+    gotoxy(centerWidth + gameState->boxes->list[i].x, centerHeight + gameState->boxes->list[i].y);
     
-    if(boxes->list[i].enable)
+    if(gameState->boxes->list[i].enable)
       textcolor(BGC_IGREEN);
     else 
       textcolor(BGC_IRED);
@@ -49,10 +62,21 @@ void drawBoxes(Boxes *boxes) {
   }
 }
 
-void drawGoals(Goals *goals) {
+void drawGoals(GameState *gameState) {
   
-  for(int i = 0; i < goals->lenght; i++) {
-   drawObject(&goals->list[i], "\033[32;1m\033[32;5m", true);
+  for(int i = 0; i < gameState->goals->lenght; i++) {
+    
+    if(gameState->goals->list[i].redraw || gameState->forceDraw) {
+      drawObject(&gameState->goals->list[i], "\033[32;1m\033[32;5m", true);
+    }
+  }
+}
+
+void clearShadow(Object *object) {
+  bool differentFromTheShadow = object->x != object->sx || object->y != object->sy;
+  if(differentFromTheShadow) {
+    gotoxy(centerWidth + object->sx, centerHeight + object->sy);
+    printf(" ");
   }
 }
 
@@ -90,10 +114,6 @@ void drawMap(GameState *gameState) {
         printf(" ");
         reset_video();
       }
-      // DRAW ANY
-      else {
-        printf(" ");
-      }
     }
   }
 }
@@ -109,7 +129,6 @@ void drawObject(Object *object,char *color, bool enableChar) {
     printf(" ");
 
   reset_video();
-
 }
 
 void drawTimeBar(GameState *gameState) {
@@ -153,7 +172,7 @@ void drawHelpBar(GameState *gameState) {
 
 void drawBannerHowToPlay(void) {
 	
-	Screen screen = getScreenSize();
+  Screen screen = getScreenSize();
   
   const char* tutorial[] = {
     "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄",

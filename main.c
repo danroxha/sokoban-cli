@@ -11,17 +11,27 @@ int main() {
 
 	Cursor cursor = {.x=0, .y=0, .pointer='>'};
 	Program program = {.running=true};
+	Screen statusScreenOld = getScreenSize();
 
 	int menuOption = 0;
 	
 	init_keyboard();
 	nocursor();
 	clear();
+	
 
 	
 	drawMenu(&cursor, &menuOption);
 
 	do {
+
+		Screen statusScreenNew = getScreenSize();
+
+	  	if(diffScreen(&statusScreenOld, &statusScreenNew)) {
+	  		statusScreenOld = statusScreenNew;
+	  		clear();
+	  		drawMenu(&cursor, &menuOption);
+	  	}
 	  	
 		if(kbhit()) {
 
@@ -54,7 +64,6 @@ int main() {
 				}	
 			}
 				
-			clear();
 			drawMenu(&cursor, &menuOption);
 		}
 		

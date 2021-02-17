@@ -83,7 +83,8 @@ Screen getScreenSize() {
 
   fd = open("/dev/tty", O_RDWR);
   if(fd < 0 || ioctl(fd, TIOCGWINSZ, &ws) < 0) err(8, "/dev/tty");
-	
+
+
   sc.width  = (int) ws.ws_col;
   sc.height = (int) ws.ws_row;
   sc.centerWidth  = sc.width / 2;
@@ -92,6 +93,11 @@ Screen getScreenSize() {
   close(fd);
 
   return sc;
+}
+
+bool diffScreen(Screen *a, Screen *b) {
+    return (a->width != b->width || a->height != b->height 
+    || a->centerWidth != b->centerWidth || a->centerHeight != b->centerHeight);
 }
 
 #endif // __SCREEN_H__

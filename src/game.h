@@ -20,6 +20,7 @@ void game() {
   Goals goals;
   GameState gameState;
   Object character;
+  Screen statusScreenOld = getScreenSize();
   
   gameState.boxes = &boxes;
   gameState.character = &character;
@@ -52,6 +53,15 @@ void game() {
   do {
     
     drawTimeBar(&gameState);
+
+    Screen statusScreenNew = getScreenSize();
+    
+    if(diffScreen(&statusScreenOld, &statusScreenNew)) {
+      statusScreenOld = statusScreenNew;
+      gameState.forceDraw = true;
+      clear();
+      draw(&gameState);
+    }
   
     if (kbhit()) {
 
@@ -65,10 +75,12 @@ void game() {
         case KEY_H_L:
         case KEY_H_U: {
           howToPlay();
+          gameState.forceDraw = true;
           break;
         }
         case KEY_R_L:
         case KEY_R_U: {
+          clear();
           resetLevel(&gameState, &savestate, &world);  
         }
       }
@@ -78,27 +90,34 @@ void game() {
       moveBoxes(&gameState, &boxes, &character, key);
 
       handleBoxesOnTarget(&boxes, &goals);
+
+      for(int i = 0; i < goals.lenght; i++) {
+        if(goals.list[i].x == character.x && goals.list[i].y == character.y) {
+          goals.list[i].redraw = false;
+        }
+      }
+
       gameState.win = checkPuzzleSolution(&gameState);
       
       
-      if(gameState.win)
+      if(gameState.win) {
         nextLevel(&gameState, &savestate, &world);
+        clear();
+      }
       
-      clear();
       draw(&gameState);
 
     }
 
   } while (key != KEY_ENTER && gameState.running);
 
-  clear();
-
+ 
   destroy(&boxes, "Boxes");
   destroy(&goals, "Goals");
   destroy(&world, "World");
   destroy(&gameState, "GameState");
   destroy(&savestate, "SaveState");
-
+  clear();
 }
 
 #endif //__GAME_SOKOBAN_INIT_H__

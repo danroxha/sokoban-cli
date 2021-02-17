@@ -1,6 +1,8 @@
 #ifndef __TYPES_SOKOBAN_H__
 #define __TYPES_SOKOBAN_H__
 
+#include <stdbool.h>
+
 #define BOX    '#'
 #define WALL   '*'
 #define DOLL   '@'
@@ -25,8 +27,9 @@ typedef struct errors {
 } Errors;
 
 typedef struct object {
-  int x, y;
+  int x, y, sx, sy;
   char body;
+  bool redraw;
 } Object;
 
 typedef struct box {
@@ -34,6 +37,7 @@ typedef struct box {
   int id;
   char body;
   bool enable;
+  bool redraw;
 } Box;
 
 typedef struct goals {
@@ -61,6 +65,7 @@ typedef struct gameState {
   Object *character;
   bool running;
   bool win;
+  bool forceDraw;
   int level;
   int time;
 } GameState;

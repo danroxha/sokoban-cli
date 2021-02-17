@@ -1,5 +1,6 @@
 #ifndef __MENU_SOKOBAN_H__
 #define __MENU_SOKOBAN_H__
+#include "sokoban.h"
 
 void howToPlay();
 
@@ -8,8 +9,17 @@ void howToPlay() {
   int key;
   clear();
   drawBannerHowToPlay();
+  Screen statusScreenOld = getScreenSize();
   
   do {
+
+  	Screen statusScreenNew = getScreenSize();
+
+	if(diffScreen(&statusScreenOld, &statusScreenNew)) {
+		statusScreenOld = statusScreenNew;
+		clear();
+		drawBannerHowToPlay();	
+	}
     
     if(kbhit()){
       
@@ -19,6 +29,7 @@ void howToPlay() {
     drawBannerHowToPlay();
   }
   while(key != KEY_ENTER && key != KEY_H_U && key != KEY_H_L);
+  clear();
 }
 
 

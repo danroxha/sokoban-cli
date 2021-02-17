@@ -41,10 +41,14 @@ void handleBoxesOnTarget(Boxes *boxes, Goals *goals) {
   for(int i = 0; i < boxes->lenght; i++) {
     
     boxes->list[i].enable = false;
+  
 
     for(int j = 0; j < goals->lenght; j++) {
+      goals->list[j].redraw = true;
       if(boxes->list[i].x == goals->list[j].x && boxes->list[i].y == goals->list[j].y) {
         boxes->list[i].enable = true;
+        boxes->list[i].redraw = true;
+        goals->list[j].redraw = false;
       }
     }
   }
