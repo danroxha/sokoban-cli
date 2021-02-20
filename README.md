@@ -23,6 +23,12 @@ Atividade da disciplina de linguagem de programação I.
   <img width="300px" src="screenshot/sokoban-5.png" />
 </p>
 
+## :video_game: Demo
+
+<p align="center" display="flex">
+  <img src="screenshot/demo.gif" />
+</p>
+
 ## &#x1F477;&#x1F3FF;&#x200D;&#x2642;&#xFE0F; Start
 
 #### Ferramentas
