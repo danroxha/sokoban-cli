@@ -10,7 +10,7 @@ Sokoban foi criado em 1981 por Hiroyuki Imabayashi. O primeiro jogo comercial fo
 
 ## :dart: Objetivo
 
-Atividade da disciplina de linguagem de programação I.
+Avaliação da disciplina de Linguagem de Programação I (LP1).
 
 ## :tv: Screenshot
 
