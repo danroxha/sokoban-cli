@@ -36,6 +36,9 @@ Avaliação da disciplina de Linguagem de Programação I (LP1).
 * :pushpin: *![make@4.+](https://img.shields.io/badge/Make@2.+-%230077B6.svg?&style=flat-square&logo=cmake&logoColor=white&color=000000&labelColor=064F8C)*
 * :pushpin: *![gcc@10.+](https://img.shields.io/badge/GCC@10.+-%230077B6.svg?&style=flat-square&logo=gnu&logoColor=white&color=4EAA25&labelColor=A42E2B)*
 
+#### Plataforma
+* :pushpin: *![linux](https://img.shields.io/badge/Linux-%230077B6.svg?&style=flat-square&logo=linux&logoColor=white&color=FCC624&labelColor=000000)*
+
 #### Repositório
 
 ```sh 
