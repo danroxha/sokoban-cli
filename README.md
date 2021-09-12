@@ -46,10 +46,27 @@ git clone https://github.com/dannRocha/sokoban-cli.git
 ```
 
 #### :cd: Inicialização
+####  ***Host***
+
 No diretório do repositório, abra o terminal e rode o comando:
 ```sh
 make
 ```
+
+####  ***Docker***
+* :pushpin: *![docker@20.10.8](https://img.shields.io/badge/Docker@20.10.8-%230077B6.svg?&style=flat-square&logo=docker&logoColor=white&color=384d54&labelColor=0db7ed)*
+* :pushpin: *![docker-compose@1.29.2](https://img.shields.io/badge/Docker-Compose@1.29.2-%230077B6.svg?&style=flat-square&logo=docker&logoColor=white&color=384d54&labelColor=0db7ed)*
+
+
+```sh
+# build
+docker build --tag sokoban .
+```
+```sh
+# run
+docker run -it --name sokoban sokoban
+```
+
 #### :warning: Observação
 O jogo é uma aplicação de linha de comando, então é necessário inicializar a aplicação com um emulador de console (terminal)
 
