@@ -28,7 +28,7 @@ void sort(char** arr, int n) {
 #include <errno.h>
 #include "screen.h"
 
-void throwMessage(const char*, char*);
+void throw_message(const char*, char*);
 
 
 #define try bool __HadError=false;
@@ -36,10 +36,10 @@ void throwMessage(const char*, char*);
 #define throw(x) __HadError=true;goto ExitJmp;
 
 
-void throwMessage(const char* message, char* color) {
+void throw_message(const char* message, char* color) {
   
-  showcursor();
-  textcolor(color);
+  show_cursor();
+  text_color(color);
   reset_video();
   fprintf(stderr, "\r%s", message);
   close_keyboard();
@@ -83,13 +83,12 @@ bool isdir(const char *name){
 #include "util.h"
 #include "../src/map.h"
 
-void hasIssueInMapsFile(const char*);
+void has_issue_in_maps_file(const char*);
 
 
-void hasIssueInMapsFile(const char* dirname) {
+void has_issue_in_maps_file(const char* dirname) {
    
-  
-  World world  = loadWorlds(dirname);
+  World world = load_worlds(dirname);
   Map map;
 
   printf("\n☑  \033[34;1mVALIDATE MAPS\033[0;0m\n");
@@ -100,9 +99,9 @@ void hasIssueInMapsFile(const char* dirname) {
     {
       try {
 
-        map = loadMap(world.levels[i].paths[j]);
+        map = load_map(world.levels[i].paths[j]);
 
-        if(map.errors.hasError) {
+        if(map.errors.has_error) {
           throw();
         }
 
@@ -121,8 +120,6 @@ void hasIssueInMapsFile(const char* dirname) {
 
   destroy(&world, "World");
   destroy(&map, "Map");
-  
-
 }
 
 #endif // __UTIL_TEST_H__
@@ -139,8 +136,6 @@ void hasIssueInMapsFile(const char* dirname) {
 void destroy(void*, const char*);
 
 void destroy(void *memory, const char* type) {
-  
-  // FREE MAP
   if(!strcmp(type, "Map")) {
     Map *map = (Map*) memory;
     for(int i = 0; i < map->height; i++) {
@@ -150,60 +145,79 @@ void destroy(void *memory, const char* type) {
 
     free(map->field);
     map->field = NULL;
+
+    return;
   } 
-  // FREE LEVELS
-  else if(!strcmp(type, "Levels")) {
+
+  if(!strcmp(type, "Levels")) {
     Levels *levels = (Levels*) memory;
     
     for(int i = 0; i < levels->total; i++) {
       if(!levels->filenames) free(levels->filenames);
       if(!levels->paths) free(levels->paths);
     }
+
+    return;
   }
-  // FREE WORLDS
-  else if(!strcmp(type, "World")) {
+
+  if(!strcmp(type, "World")) {
   	World *world = (World*) memory;
 
   	for(int i = 0; i < world->total; i++) {
   		destroy(&world->levels[i], "Levels");
   	}
 
-  	if(world->levels != NULL)
+  	if(world->levels != NULL) {
   		free(world->levels);
+    }
+
+    return;
   }
-  // FREE BOXES
-  else if(!strcmp(type, "Boxes")) {
+
+  if(!strcmp(type, "Boxes")) {
     Boxes *boxes = (Boxes*) memory;
     
-    if(boxes->list != NULL) free(boxes->list);
-  
+    if(boxes->list != NULL) {
+      free(boxes->list);
+    }
+
+    return;
   }
-  // FREE GOALS
-  else if(!strcmp(type, "Goals")) {
+
+  if(!strcmp(type, "Goals")) {
     Goals *goals = (Goals*) memory;
 
-    if(goals->list != NULL) free(goals->list);
+    if(goals->list != NULL) {
+      free(goals->list);
+    }
+
+    return;
   }
-  // FREE GAMESTATE
-  else if(!strcmp(type, "GameState")) {
+
+  if(!strcmp(type, "GameState")) {
     GameState *gameState = (GameState*) memory;
 
-    if(gameState->currrentMap.field != NULL)
-      destroy(&gameState->currrentMap.field, "Map");
+    if(gameState->current_map.field != NULL) {
+      destroy(&gameState->current_map.field, "Map");
+    }
+
+    return;
   }
-  // FREE SAVESTATE
-  else if(!strcmp(type, "SaveState")) {
+
+  if(!strcmp(type, "SaveState")) {
     SaveState *savestate = (SaveState*) memory;
     
-    if(savestate->path)
+    if(savestate->path) {
       free(savestate->path);
+    }
+
+    return;
   }
-  else {
-    fprintf(stderr, "\033[31;1mFILE: %s \n \033[0;1m", __FILE__);
-    fprintf(stderr, "\033[31;1mError ↴\n  'destroy': Função 'destroy' recebeu tipo não registrado\n\033[0;1m");
-    fprintf(stderr, "\033[32;1m   * Type :: '%s' \033[0;1m", type );
-    exit(1);
-  }
+
+  fprintf(stderr, "\033[31;1mFILE: %s \n \033[0;1m", __FILE__);
+  fprintf(stderr, "\033[31;1mError ↴\n  'destroy': Função 'destroy' recebeu tipo não registrado\n\033[0;1m");
+  fprintf(stderr, "\033[32;1m   * Type :: '%s' \033[0;1m", type );
+  exit(1);
 }
 
 #endif // __UTIL_TEST_H__
@@ -211,7 +225,7 @@ void destroy(void *memory, const char* type) {
 #ifndef __UTIL_NUMBER_H__
 #define __UTIL_NUMBER_H__
 
-int numberLength(int number) {
+int number_length(int number) {
   int size = 0;
 
   while(number /= 10) {

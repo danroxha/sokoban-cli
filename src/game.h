@@ -5,62 +5,62 @@
 
 
 //#define __DEBUGGER_BUILD_MAP_TEST__
-
+void game();
 
 void game() {
   
   srand(time(0));
   
   #ifdef __DEBUGGER_BUILD_MAP_TEST__
-    hasIssueInMapsFile("world/");
+    has_issue_in_maps_file("world/");
     return 0;
   #endif
   
   Boxes boxes;
   Goals goals;
-  GameState gameState;
+  GameState game_state;
   Object character;
-  Screen statusScreenOld = getScreenSize();
+  Screen status_old_screen = get_screen_size();
   
-  gameState.boxes = &boxes;
-  gameState.character = &character;
-  gameState.running = true;
+  game_state.boxes = &boxes;
+  game_state.character = &character;
+  game_state.running = true;
 
-  SaveState savestate = loadSaveState("savestate/");
-  World world = loadWorlds("world/");
+  SaveState save_state = load_save_state(SAVE_STATE_PATH);
+  World world = load_worlds("world/");
 
-  bool isCorruptedSavestate = savestate.world > world.total || savestate.level > world.levels[savestate.world].total;
+  bool is_corrupted_save_state = save_state.world > world.total || save_state.level > world.levels[save_state.world].total;
   
-  if(isCorruptedSavestate) {
-    removeSaveState("savestate/");
-    savestate = loadSaveState("savestate/");
+  if(is_corrupted_save_state) {
+    remove_save_state(SAVE_STATE_PATH);
+    destroy(&save_state, "SaveState");
+    save_state = load_save_state(SAVE_STATE_PATH);
   }
 
-  gameState.currrentMap = loadMap(world.levels[savestate.world].paths[savestate.level]);
+  game_state.current_map = load_map(world.levels[save_state.world].paths[save_state.level]);
 
-  
-  configGameState(&gameState);
-  configCharacter(&character, &gameState);
-  configBoxes(&boxes, &gameState);
-  configGoals(&goals, &gameState);
+  config_game_state(&game_state);
+  config_character(&character, &game_state);
+  config_boxes(&boxes, &game_state);
+  config_goals(&goals, &game_state);
 
   clear();
 
-  draw(&gameState);
+  draw(&game_state);
 
   int key;
   
   do {
     
-    drawTimeBar(&gameState);
+    draw_time_bar(&game_state);
 
-    Screen statusScreenNew = getScreenSize();
+    Screen status_new_screen = get_screen_size();
     
-    if(diffScreen(&statusScreenOld, &statusScreenNew)) {
-      statusScreenOld = statusScreenNew;
-      gameState.forceDraw = true;
+    if(diff_screen(&status_old_screen, &status_new_screen)) {
+      status_old_screen = status_new_screen;
+      game_state.force_draw = true;
       clear();
-      draw(&gameState);
+      draw(&game_state);
     }
   
     if (kbhit()) {
@@ -69,27 +69,26 @@ void game() {
 
       switch(key) {
         case CTRL_C: {
-          gameState.running = false;
+          game_state.running = false;
           break;
         }
         case KEY_H_L:
         case KEY_H_U: {
-          howToPlay();
-          gameState.forceDraw = true;
+          how_to_play();
+          game_state.force_draw = true;
           break;
         }
         case KEY_R_L:
         case KEY_R_U: {
           clear();
-          resetLevel(&gameState, &savestate, &world);  
+          reset_level(&game_state, &save_state, &world);  
         }
       }
-        
 
-      moveDoll(&gameState, &character, key);
-      moveBoxes(&gameState, &boxes, &character, key);
+      move_character(&game_state, &character, key);
+      move_boxes(&game_state, &boxes, &character, key);
 
-      handleBoxesOnTarget(&boxes, &goals);
+      handle_boxes_on_target(&boxes, &goals);
 
       for(int i = 0; i < goals.lenght; i++) {
         if(goals.list[i].x == character.x && goals.list[i].y == character.y) {
@@ -97,26 +96,24 @@ void game() {
         }
       }
 
-      gameState.win = checkPuzzleSolution(&gameState);
+      check_puzzle_solution(&game_state);
       
-      
-      if(gameState.win) {
-        nextLevel(&gameState, &savestate, &world);
+      if(game_state.win) {
+        next_level(&game_state, &save_state, &world);
         clear();
       }
       
-      draw(&gameState);
-
+      draw(&game_state);
     }
 
-  } while (key != KEY_ENTER && gameState.running);
+  } while (key != KEY_ENTER && game_state.running);
 
  
   destroy(&boxes, "Boxes");
   destroy(&goals, "Goals");
   destroy(&world, "World");
-  destroy(&gameState, "GameState");
-  destroy(&savestate, "SaveState");
+  destroy(&game_state, "GameState");
+  destroy(&save_state, "SaveState");
   clear();
 }
 

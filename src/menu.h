@@ -2,23 +2,23 @@
 #define __MENU_SOKOBAN_H__
 #include "sokoban.h"
 
-void howToPlay();
+void how_to_play();
 
-void howToPlay() {
+void how_to_play() {
   
   int key;
   clear();
-  drawBannerHowToPlay();
-  Screen statusScreenOld = getScreenSize();
+  draw_banner_how_to_play();
+  Screen statusScreenOld = get_screen_size();
   
   do {
 
-  	Screen statusScreenNew = getScreenSize();
+  	Screen statusScreenNew = get_screen_size();
 
-	if(diffScreen(&statusScreenOld, &statusScreenNew)) {
+	if(diff_screen(&statusScreenOld, &statusScreenNew)) {
 		statusScreenOld = statusScreenNew;
 		clear();
-		drawBannerHowToPlay();	
+		draw_banner_how_to_play();	
 	}
     
     if(kbhit()){
@@ -26,17 +26,15 @@ void howToPlay() {
       key = readch();
       clear();
     }
-    drawBannerHowToPlay();
+    draw_banner_how_to_play();
   }
   while(key != KEY_ENTER && key != KEY_H_U && key != KEY_H_L);
   clear();
 }
 
+void draw_menu(Cursor *cursor, int *option) {
 
-
-void drawMenu(Cursor *cursor, int *option) {
-
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   const char* banner[] =  {
    "\033[31;1m",
    " ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄   ▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄    ▄ ",
@@ -61,30 +59,30 @@ void drawMenu(Cursor *cursor, int *option) {
     LINE_THIRTEEN = 13,
   };
 
-  bool isContinue  = thereIsSavestate("savestate/");
-  int centerWidth  = screen.centerWidth - strlen(banner[LINE_NINE]) / 2;
-  int centerHeight = screen.height / 4;
-  int centerBanner = centerWidth;
+  bool is_continue  = there_is_save_state("savestate/");
+  int center_width  = screen.center_width - strlen(banner[LINE_NINE]) / 2;
+  int center_height = screen.height / 4;
+  int center_banner = center_width;
   int selection    = 0;
 
 
-  cursor->x = centerWidth + strlen(banner[LINE_NINE]) / 2.6;
-  if(cursor->y <  centerHeight + LINE_TEN)
-    cursor->y = centerHeight + LINE_THIRTEEN - (int) !isContinue;
-  if(cursor->y > centerHeight + LINE_THIRTEEN - (int) !isContinue)
-    cursor->y = centerHeight + LINE_TEN;
+  cursor->x = center_width + strlen(banner[LINE_NINE]) / 2.6;
+  if(cursor->y <  center_height + LINE_TEN)
+    cursor->y = center_height + LINE_THIRTEEN - (int) !is_continue;
+  if(cursor->y > center_height + LINE_THIRTEEN - (int) !is_continue)
+    cursor->y = center_height + LINE_TEN;
 
-  selection = cursor->y - centerHeight - LINE_NINE + (int)!isContinue;
+  selection = cursor->y - center_height - LINE_NINE + (int)!is_continue;
   
-  int hidenOption = 0;
+  int hiden_option = 0;
   int size = sizeof(banner) / sizeof(char*);
   for(int i = 0; i < size; i++) {
-    if(!isContinue && i == LINE_TEN) {
-      hidenOption = 1;
+    if(!is_continue && i == LINE_TEN) {
+      hiden_option = 1;
       continue;
     }
 
-    gotoxy(centerBanner, centerHeight + i - hidenOption); 
+    goto_xy(center_banner, center_height + i - hiden_option); 
     printf("%s", banner[i]);
   }
  

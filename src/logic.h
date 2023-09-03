@@ -4,12 +4,12 @@
 #include <stdbool.h>
 #include "../lib/types.h"
 
-bool checkCollisionBetweenBoxes(Boxes*);
-bool checkPuzzleSolution(GameState*);
-void handleBoxesOnTarget(Boxes*, Goals*);
+bool check_collision_between_boxes(Boxes*);
+void check_puzzle_solution(GameState*);
+void handle_boxes_on_target(Boxes*, Goals*);
 
 
-bool checkCollisionBetweenBoxes(Boxes *boxes) {
+bool check_collision_between_boxes(Boxes *boxes) {
   
   for(int i = 0; i < boxes->lenght; i++) {
     for(int j = 0; j < boxes->lenght; j++) {
@@ -23,20 +23,20 @@ bool checkCollisionBetweenBoxes(Boxes *boxes) {
   return false;
 }
 
-bool checkPuzzleSolution(GameState *gameState) {
+void check_puzzle_solution(GameState *game_state) {
   
-  int completePuzzle = 0;
+  int completed_puzzle = 0;
   
-  for(int i = 0; i < gameState->boxes->lenght; i++) {
-    if(gameState->boxes->list[i].enable)
-      completePuzzle++;
+  for(int i = 0; i < game_state->boxes->lenght; i++) {
+    if(game_state->boxes->list[i].enable)
+      completed_puzzle++;
   }
 
-  return completePuzzle == gameState->boxes->lenght;
+  game_state->win = completed_puzzle == game_state->boxes->lenght;
 
 }
 
-void handleBoxesOnTarget(Boxes *boxes, Goals *goals) {
+void handle_boxes_on_target(Boxes *boxes, Goals *goals) {
 
   for(int i = 0; i < boxes->lenght; i++) {
     
