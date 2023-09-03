@@ -11,26 +11,24 @@ int main() {
 
   Cursor cursor = {.x=0, .y=0, .pointer='>'};
   Program program = {.running=true};
-  Screen statusScreenOld = getScreenSize();
+  Screen status_old_screen = get_screen_size();
 
-  int menuOption = 0;
+  int menu_option = 0;
   
   init_keyboard();
-  nocursor();
+  no_cursor();
   clear();
   
-
-  
-  drawMenu(&cursor, &menuOption);
+  draw_menu(&cursor, &menu_option);
 
   do {
 
-    Screen statusScreenNew = getScreenSize();
+    Screen status_new_screen = get_screen_size();
 
-      if(diffScreen(&statusScreenOld, &statusScreenNew)) {
-        statusScreenOld = statusScreenNew;
+      if(diff_screen(&status_old_screen, &status_new_screen)) {
+        status_old_screen = status_new_screen;
         clear();
-        drawMenu(&cursor, &menuOption);
+        draw_menu(&cursor, &menu_option);
       }
       
     if(kbhit()) {
@@ -43,18 +41,18 @@ int main() {
       if(key == KEY_ARROW_UP) cursor.y--;
       if(key == KEY_ARROW_DOWN) cursor.y++;
       if(key == KEY_ENTER) {
-        switch(menuOption){
+        switch(menu_option){
           case MENU_CONTINUE: {
             game();
             break;
           }
           case MENU_NEW_GAME: {
-            removeSaveState("savestate/");
+            remove_save_state(SAVE_STATE_PATH);
             game();
             break;
           }
           case MENU_HOW_TO_PLAY: {
-            howToPlay();
+            how_to_play();
             break;
           }
           case MENU_EXIT: {
@@ -64,11 +62,11 @@ int main() {
         }	
       }
         
-      drawMenu(&cursor, &menuOption);
+      draw_menu(&cursor, &menu_option);
     }
     
-    gotoxy(cursor.x, cursor.y);
-    textcolor(IRED);
+    goto_xy(cursor.x, cursor.y);
+    text_color(IRED);
     printf("%c", cursor.pointer);
     reset_video();
 
@@ -76,7 +74,7 @@ int main() {
   while(program.running);
   
   close_keyboard();
-  showcursor();
+  show_cursor();
   clear();
   
   return 0;

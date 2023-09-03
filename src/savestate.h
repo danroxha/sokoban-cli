@@ -11,90 +11,90 @@
 #include "../lib/types.h"
 #include "../lib/util.h"
 
+SaveState load_save_state(const char*);
+void define_save_state(SaveState);
+void remove_save_state(const char*);
+bool there_is_save_state(const char*);
 
-SaveState loadSaveState(const char* dirname);
-void defineSaveState(SaveState savestate);
-void removeSaveState(const char* dirname);
-bool thereIsSavestate(const char* dirname);
+SaveState load_save_state(const char* dirname) {
 
-
-SaveState loadSaveState(const char* dirname) {
-
-  SaveState savestate = {.world=0, .level=0, .path=NULL};
-  const char* filename = "savestate.txt";
+  SaveState save_state = {.world=0, .level=0, .path=NULL};
+  const char* filename = "save_state.txt";
   const int mode = 0777;
-  savestate.path = (char*) calloc(strlen(dirname) + strlen(filename), sizeof(char));
+  save_state.path = (char*) calloc(strlen(dirname) + strlen(filename), sizeof(char));
 
-  sprintf(savestate.path ,"%s%s", dirname, filename);
+  if(save_state.path == NULL) {
+    fprintf(stderr, "Error: memory isn't enough");
+    exit(1);
+  }
+
+  sprintf(save_state.path ,"%s%s", dirname, filename);
   
   if(!isdir(dirname)) {
-
     mkdir(dirname, mode);
-     FILE *fileopen = fopen(savestate.path, "w");
+    FILE *file = fopen(save_state.path, "w");
 
-     if(fileopen == NULL) {
-      textcolor(IRED);
-      fprintf(stderr, "Error: Nao foi possível carregar o arquivo de savestate em: %s", savestate.path);
+    if(file == NULL) {
+      free(save_state.path);
+      text_color(IRED);
+      fprintf(stderr, "Error: Nao foi possível carregar o arquivo de save_state em: %s", save_state.path);
       reset_video();
       exit(1);
      }
 
-     fprintf(fileopen, "%d %d", savestate.world, savestate.level);
+     fprintf(file, "%d %d", save_state.world, save_state.level);
      
-    fclose(fileopen);
+    fclose(file);
     
-    return savestate;
+    return save_state;
   }
-
   
-  FILE *fileopen = fopen(savestate.path, "r");
+  FILE *file = fopen(save_state.path, "r");
 
-  if(fileopen == NULL) {
-    textcolor(IRED);
-    fprintf(stderr, "Error: Nao foi possível carregar o arquivo de savestate em: %s", savestate.path);
+  if(file == NULL) {
+    text_color(IRED);
+    fprintf(stderr, "Error: Nao foi possível carregar o arquivo de save_state em: %s", save_state.path);
     reset_video();
     exit(1);
   }
 
-  fscanf(fileopen, "%d %d", &savestate.world, &savestate.level);
-  fclose(fileopen);
+  fscanf(file, "%d %d", &save_state.world, &save_state.level);
+  fclose(file);
   
-  return savestate;	
+  return save_state;	
 }
 
+void define_save_state(SaveState save_state) {
 
-void defineSaveState(SaveState savestate) {
+  FILE* file = fopen(save_state.path, "w");
 
-  FILE* fileopen = fopen(savestate.path, "w");
-
-  if(fileopen == NULL) {
-      textcolor(IRED);
-    fprintf(stderr, "Error: Nao foi possível definir o arquivo de savestate em: %s", savestate.path);
+  if(file == NULL) {
+    text_color(IRED);
+    fprintf(stderr, "Error: Nao foi possível definir o arquivo de save_state em: %s", save_state.path);
     reset_video();
-      exit(1);
+    exit(1);
   }
   
-  fprintf(fileopen, "%d %d", savestate.world, savestate.level);
-  fclose(fileopen);	
-  
+  fprintf(file, "%d %d", save_state.world, save_state.level);
+  fclose(file);	
 }
 
-void removeSaveState(const char* dirname) {
-
-  SaveState savestate = loadSaveState(dirname);
-  unlink(savestate.path);
+void remove_save_state(const char* dirname) {
+  SaveState save_state = load_save_state(dirname);
+  unlink(save_state.path);
   
   if(rmdir(dirname)) {
     clear();
-    showcursor();
-      textcolor(IRED);
-    fprintf(stderr, "Error: Não foi possivel remover o savestate de: %s", dirname);
-      reset_video();
+    show_cursor();
+    text_color(IRED);
+    fprintf(stderr, "Error: Não foi possivel remover o save_state de: %s", dirname);
+    reset_video();
     exit(1);
   }
 }
 
-bool thereIsSavestate(const char* dirname) {
+bool there_is_save_state(const char* dirname) {
   return isdir(dirname);
 }
+
 #endif // __SAVESTATE_SOKOBAN_H__

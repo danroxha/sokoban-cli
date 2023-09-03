@@ -50,16 +50,15 @@
 #define BGC_IWHITE "\x1b[47;1m"
 
 
-
-void nocursor() {
+void no_cursor() {
   printf("\x1b[?25l");
 }
 
-void showcursor() {
+void show_cursor() {
   printf("\x1b[?25h");
 }
 
-void gotoxy(unsigned int x, unsigned int y) {
+void goto_xy(unsigned int x, unsigned int y) {
   printf("\x1b[%d;%df", y, x);
 }
 
@@ -67,7 +66,7 @@ void clear() {
   printf("\x1b[H\x1b[J"); 
 }
 
-void textcolor(char *color) {
+void text_color(char *color) {
   printf("%s", color);
 }
 
@@ -75,7 +74,7 @@ void reset_video() {
   printf("\x1b[0m");
 }
 
-Screen getScreenSize() {
+Screen get_screen_size() {
 
   struct screen sc;
   struct winsize ws;
@@ -87,17 +86,17 @@ Screen getScreenSize() {
 
   sc.width  = (int) ws.ws_col;
   sc.height = (int) ws.ws_row;
-  sc.centerWidth  = sc.width / 2;
-  sc.centerHeight = sc.height / 2;
+  sc.center_width  = sc.width / 2;
+  sc.center_height = sc.height / 2;
 
   close(fd);
 
   return sc;
 }
 
-bool diffScreen(Screen *a, Screen *b) {
+bool diff_screen(Screen *a, Screen *b) {
     return (a->width != b->width || a->height != b->height 
-    || a->centerWidth != b->centerWidth || a->centerHeight != b->centerHeight);
+    || a->center_width != b->center_width || a->center_height != b->center_height);
 }
 
 #endif // __SCREEN_H__

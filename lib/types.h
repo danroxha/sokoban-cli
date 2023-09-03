@@ -22,7 +22,7 @@ typedef struct error{
 
 typedef struct errors {
   Error *list;
-  bool hasError;
+  bool has_error;
   int size;
 } Errors;
 
@@ -61,11 +61,11 @@ typedef struct map {
 typedef struct gameState {
   Boxes *boxes;
   Goals *goals;
-  Map currrentMap;
+  Map current_map;
   Object *character;
   bool running;
   bool win;
-  bool forceDraw;
+  bool force_draw;
   int level;
   int time;
 } GameState;
@@ -84,7 +84,7 @@ typedef struct world {
 
 typedef struct screen {
 	int width, height;
-	int centerWidth, centerHeight;
+	int center_width, center_height;
 } Screen;
 
 typedef struct cursor {

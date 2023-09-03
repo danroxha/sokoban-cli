@@ -3,114 +3,112 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "../lib/types.h"
 #include "../lib/screen.h"
 #include "../lib/util.h"
 
 void draw(GameState*);
-void drawMap(GameState*);
-void drawBoxes(GameState*);
-void drawGoals(GameState*);
-void drawObject(Object*, char*, bool);
-void drawIimeBar(GameState*);
-void drawHelpBar(GameState*);
-void drawCaption(GameState*);
-void drawCharacter(GameState *);
-void drawBannerHowToPlay(void);
-void drawWinMessage(void);
-void clearShadow(Object *);
+void draw_map(GameState*);
+void draw_boxes(GameState*);
+void draw_goals(GameState*);
+void draw_object(Object*, char*, bool);
+void draw_time_bar(GameState*);
+void draw_help_bar(GameState*);
+void draw_caption(GameState*);
+void draw_character(GameState *);
+void draw_banner_how_to_play(void);
+void draw_win_message(void);
+void draw_next_level_message(void);
+void clear_shadow(Object *);
 
-static int centerWidth = 0;
-static int centerHeight = 0;
+static int center_width = 0;
+static int center_height = 0;
 
-void draw(GameState *gameState) { 
-  clearShadow(gameState->character);
-  drawHelpBar(gameState);
-  drawCaption(gameState);
-  drawMap(gameState);
-  drawGoals(gameState);
-  drawBoxes(gameState);
-  drawCharacter(gameState);
+void draw(GameState *game_state) { 
+  clear_shadow(game_state->character);
+  draw_help_bar(game_state);
+  draw_caption(game_state);
+  draw_map(game_state);
+  draw_goals(game_state);
+  draw_boxes(game_state);
+  draw_character(game_state);
 
-  gameState->forceDraw = false;
+  game_state->force_draw = false;
 }
 
-void drawCharacter(GameState *gameState) {
-    Object character = *gameState->character;
-    bool differentFromTheShadow = character.x != character.sx || character.y != character.sy;
+void draw_character(GameState *game_state) {
+    Object character = *game_state->character;
+    bool different_from_the_shadow = character.x != character.sx || character.y != character.sy;
     
-    if(differentFromTheShadow || gameState->forceDraw) {
-        drawObject(gameState->character, BGC_IYELLOW, false);
+    if(different_from_the_shadow || game_state->force_draw) {
+      draw_object(game_state->character, BGC_IYELLOW, false);
     }
       
 }
 
-void drawBoxes(GameState *gameState) {
+void draw_boxes(GameState *game_state) {
+  for(int i = 0; i < game_state->boxes->lenght; i++) {
+    if(!game_state->boxes->list[i].redraw && !game_state->force_draw) continue;
+    game_state->boxes->list[i].redraw = false;
+    goto_xy(center_width + game_state->boxes->list[i].x, center_height + game_state->boxes->list[i].y);
     
-  for(int i = 0; i < gameState->boxes->lenght; i++) {
-    if(!gameState->boxes->list[i].redraw && !gameState->forceDraw) continue;
-    gameState->boxes->list[i].redraw = false;
-    gotoxy(centerWidth + gameState->boxes->list[i].x, centerHeight + gameState->boxes->list[i].y);
-    
-    if(gameState->boxes->list[i].enable)
-      textcolor(BGC_IGREEN);
-    else 
-      textcolor(BGC_IRED);
+    if(game_state->boxes->list[i].enable) {
+      text_color(BGC_IGREEN);
+    }
+    else {
+      text_color(BGC_IRED);
+    }
   
     printf(" ");
     reset_video();
   }
 }
 
-void drawGoals(GameState *gameState) {
-  
-  for(int i = 0; i < gameState->goals->lenght; i++) {
-    
-    if(gameState->goals->list[i].redraw || gameState->forceDraw) {
-      drawObject(&gameState->goals->list[i], "\033[32;1m\033[32;5m", true);
+void draw_goals(GameState *game_state) {
+  for(int i = 0; i < game_state->goals->lenght; i++) { 
+    if(game_state->goals->list[i].redraw || game_state->force_draw) {
+      draw_object(&game_state->goals->list[i], "\033[32;1m\033[32;5m", true);
     }
   }
 }
 
-void clearShadow(Object *object) {
-  bool differentFromTheShadow = object->x != object->sx || object->y != object->sy;
-  if(differentFromTheShadow) {
-    gotoxy(centerWidth + object->sx, centerHeight + object->sy);
+void clear_shadow(Object *object) {
+  bool different_from_the_shadow = object->x != object->sx || object->y != object->sy;
+  if(different_from_the_shadow) {
+    goto_xy(center_width + object->sx, center_height + object->sy);
     printf(" ");
   }
 }
 
-void drawMap(GameState *gameState) {
+void draw_map(GameState *game_state) {
 
-  Screen screen = getScreenSize();
-  centerWidth  = screen.centerWidth - gameState->currrentMap.width / 2;
-  centerHeight = screen.centerHeight - gameState->currrentMap.height / 2;
+  Screen screen = get_screen_size();
+  center_width  = screen.center_width - game_state->current_map.width / 2;
+  center_height = screen.center_height - game_state->current_map.height / 2;
   
 
-  for(int y = 0; y < gameState->currrentMap.height; y++) {
-    
+  for(int y = 0; y < game_state->current_map.height; y++) {
     enum  {
       LINE_STRING_WORLD = 1,
       LINE_STRING_LEVEL = 2,
     };
 
     if(y == LINE_STRING_WORLD || y == LINE_STRING_LEVEL) {
-
-      gotoxy(centerWidth + 1, centerHeight + y + 1);
-      textcolor(IYELLOW);
-      printf("%s", gameState->currrentMap.field[y]);
+      goto_xy(center_width + 1, center_height + y + 1);
+      text_color(IYELLOW);
+      printf("%s", game_state->current_map.field[y]);
       reset_video();
       continue;
-
     }
 
-    for(int x = 0; x < gameState->currrentMap.width; x++) {
+    for(int x = 0; x < game_state->current_map.width; x++) {
       
-      gotoxy(centerWidth + x + 1, centerHeight + y + 1);
+      goto_xy(center_width + x + 1, center_height + y + 1);
 
       // DRAW WALL
-      if (gameState->currrentMap.field[y][x] == WALL) {
-        textcolor(BGC_CYAN);
+      if (game_state->current_map.field[y][x] == WALL) {
+        text_color(BGC_CYAN);
         printf(" ");
         reset_video();
       }
@@ -118,12 +116,12 @@ void drawMap(GameState *gameState) {
   }
 }
 
-void drawObject(Object *object,char *color, bool enableChar) {
+void draw_object(Object *object,char *color, bool enable_char) {
   
-  gotoxy(centerWidth + object->x, centerHeight + object->y);
-  textcolor(color);
+  goto_xy(center_width + object->x, center_height + object->y);
+  text_color(color);
   
-  if(enableChar)
+  if(enable_char)
     printf("%c", object->body);
   else
     printf(" ");
@@ -131,48 +129,48 @@ void drawObject(Object *object,char *color, bool enableChar) {
   reset_video();
 }
 
-void drawTimeBar(GameState *gameState) {
+void draw_time_bar(GameState *game_state) {
 
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   
-  int stopwatch = time(0) - gameState->time;
+  int stopwatch = time(0) - game_state->time;
   char* textTime = "Time: ";
-  char* labelTime = (char*) calloc(strlen(textTime) + numberLength(stopwatch), sizeof(char));
+  char* label_time = (char*) calloc(strlen(textTime) + number_length(stopwatch), sizeof(char));
   
-  sprintf(labelTime, "%s%ds", textTime, stopwatch);
+  sprintf(label_time, "%s%ds", textTime, stopwatch);
 
-  int x  = screen.centerWidth - strlen(labelTime) / 2.5;
-  int y = screen.centerHeight + gameState->currrentMap.height / 1.5;
+  int x  = screen.center_width - strlen(label_time) / 2.5;
+  int y = screen.center_height + game_state->current_map.height / 1.5;
 
-  gotoxy(x, y);
-  printf("%s", labelTime);
+  goto_xy(x, y);
+  printf("%s", label_time);
   
-  free(labelTime);
+  free(label_time);
 }
 
-void drawHelpBar(GameState *gameState) {
+void draw_help_bar(GameState *game_state) {
   
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   const float MARGIN_X = 6.0;
   const float MARGIN_Y = 2.0;
   
   const char* helpText = "\033[36;1m'Menu'\033[0;0m - \033[32;1mENTER\033[0;0m |\
  \033[36;1m'Restart'\033[0;0m - \033[32;1mR\033[0;0m";
   
-  int x = screen.centerWidth - strlen(helpText) / MARGIN_X;
-  int y = screen.centerHeight - gameState->currrentMap.height / MARGIN_Y;
+  int x = screen.center_width - strlen(helpText) / MARGIN_X;
+  int y = screen.center_height - game_state->current_map.height / MARGIN_Y;
 
-  gotoxy(x, y);
-  textcolor(ICYAN);
-  textcolor(ICYAN);
+  goto_xy(x, y);
+  text_color(ICYAN);
+  text_color(ICYAN);
   printf("%s", helpText);
   reset_video();
   
 }
 
-void drawBannerHowToPlay(void) {
+void draw_banner_how_to_play(void) {
 	
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   
   const char* tutorial[] = {
     "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄",
@@ -195,11 +193,11 @@ void drawBannerHowToPlay(void) {
   const float MARGIN_Y = 4.0;
 
   int size =  (int)sizeof(tutorial) / sizeof(char*);
-  int verticalAlign   = screen.centerWidth - strlen(tutorial[0]) / MARGIN_X;
-  int horizontalAlign = screen.height / MARGIN_Y;
+  int vertical_align   = screen.center_width - strlen(tutorial[0]) / MARGIN_X;
+  int horizontal_align = screen.height / MARGIN_Y;
 
   for(int i = 0; i < size; i++) {
-    gotoxy(verticalAlign, horizontalAlign + i);
+    goto_xy(vertical_align, horizontal_align + i);
     printf("%s", tutorial[i]);
   }
 
@@ -207,9 +205,9 @@ void drawBannerHowToPlay(void) {
 
 }
 
-void drawCaption(GameState *gameState) {
+void draw_caption(GameState *game_state) {
 
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
 
   const char* caption[] = {
     "\033[43m \033[0;0m - Character",
@@ -221,12 +219,12 @@ void drawCaption(GameState *gameState) {
   
   int size = sizeof(caption) / sizeof(char*);
   for(int i = 0; i < size; i++) {
-    gotoxy(screen.centerWidth + gameState->currrentMap.width , screen.centerHeight + i);
+    goto_xy(screen.center_width + game_state->current_map.width , screen.center_height + i);
     printf("%s", caption[i]);
   }
 }
 
-void drawWinMessage(void) {
+void draw_win_message(void) {
   const char* message[] = {
     "                         ",
     "█░░▒█ █ █▄░█ █▄░█ ██▀ █▀▄",
@@ -244,22 +242,22 @@ void drawWinMessage(void) {
     "        `\"\"\"\"\"\"\"` "
   };
   
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   const float MARGIN_X = 2.0;
   const float MARGIN_Y = 4.0;
 
   int size =  (int)sizeof(message) / sizeof(char*);
-  int verticalAlign   = screen.centerWidth - strlen(message[0]) / MARGIN_X;
-  int horizontalAlign = screen.height / MARGIN_Y;
+  int vertical_align   = screen.center_width - strlen(message[0]) / MARGIN_X;
+  int horizontal_align = screen.height / MARGIN_Y;
 
   const int seconds = 3;
   int times = time(0);
   
   clear();
-  textcolor(IYELLOW);
+  text_color(IYELLOW);
   do {
     for(int i = 0; i < size; i++) {
-      gotoxy(verticalAlign, horizontalAlign + i);
+      goto_xy(vertical_align, horizontal_align + i);
       printf("%s", message[i]);
     }
 
@@ -269,10 +267,10 @@ void drawWinMessage(void) {
 
 }
 
-void drawNextLevelMessage(void) {
+void draw_next_level_message(void) {
   
   
-  Screen screen = getScreenSize();
+  Screen screen = get_screen_size();
   
   
   const char* message[] = {
@@ -288,22 +286,22 @@ void drawNextLevelMessage(void) {
   const float MARGIN_Y = 2.5;
 
   int size =  (int)sizeof(message) / sizeof(char*);
-  int verticalAlign   = screen.centerWidth - strlen(message[0]) / MARGIN_X;
-  int horizontalAlign = screen.height / MARGIN_Y;
+  int vertical_align   = screen.center_width - strlen(message[0]) / MARGIN_X;
+  int horizontal_align = screen.height / MARGIN_Y;
 
   const int seconds = 3;
   int times = time(0);
   
   clear();
-  textcolor(ICYAN);
+  text_color(ICYAN);
 
   do {
     for(int i = 0; i < size; i++) {
-      gotoxy(verticalAlign, horizontalAlign + i);
+      goto_xy(vertical_align, horizontal_align + i);
       printf("%s", message[i]);
     }
-
-  }while(times + seconds > time(0));
+  }
+  while(times + seconds > time(0));
 
   reset_video();
 }

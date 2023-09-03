@@ -6,24 +6,22 @@
 #include "../lib/types.h"
 #include "savestate.h"
 
-void configCharacter(Object*, GameState*);
-void configBoxes(Boxes*, GameState*);
-void configGoals(Goals*, GameState*);
-void configGameState(GameState*);
+void config_character(Object*, GameState*);
+void config_boxes(Boxes*, GameState*);
+void config_goals(Goals*, GameState*);
+void config_game_state(GameState*);
 
-
-
-void configCharacter(Object *character, GameState *gameState) {
+void config_character(Object *character, GameState *game_state) {
   
   character->body = DOLL;
   character->redraw = true;
  
-  for (int y = 0; y < gameState->currrentMap.height; y++)  {
-    for (int x = 0; x < gameState->currrentMap.width; x++) {
-      if (gameState->currrentMap.field[y][x] == DOLL) {
+  for (int y = 0; y < game_state->current_map.height; y++)  {
+    for (int x = 0; x < game_state->current_map.width; x++) {
+      if (game_state->current_map.field[y][x] == DOLL) {
         character->x = x + 1;
         character->y = y + 1;
-        gameState->currrentMap.field[y][x] = ' ';
+        game_state->current_map.field[y][x] = ' ';
         break;
       }
     }
@@ -32,14 +30,14 @@ void configCharacter(Object *character, GameState *gameState) {
   character->sy = character->y;
 }
 
-void configBoxes(Boxes *boxes, GameState *gameState) {
+void config_boxes(Boxes *boxes, GameState *game_state) {
   
   boxes->list   = NULL;
   boxes->lenght = 0;
 
- for (int y = 0; y < gameState->currrentMap.height; y++) 
-    for (int x = 0; x < gameState->currrentMap.width; x++) {
-      if(gameState->currrentMap.field[y][x] == BOX) {
+ for (int y = 0; y < game_state->current_map.height; y++) 
+    for (int x = 0; x < game_state->current_map.width; x++) {
+      if(game_state->current_map.field[y][x] == BOX) {
         boxes->lenght++;
       }
     }
@@ -55,29 +53,31 @@ void configBoxes(Boxes *boxes, GameState *gameState) {
 
   int index = 0;
 
-  for (int y = 0; y < gameState->currrentMap.height; y++) 
-    for (int x = 0; x < gameState->currrentMap.width; x++) {
-      if(gameState->currrentMap.field[y][x] == BOX) {
+  for (int y = 0; y < game_state->current_map.height; y++) 
+    for (int x = 0; x < game_state->current_map.width; x++) {
+      if(game_state->current_map.field[y][x] == BOX) {
         boxes->list[index].x = x + 1;
         boxes->list[index].y = y + 1;
-        gameState->currrentMap.field[y][x] = ' ';
+        game_state->current_map.field[y][x] = ' ';
         index++;
       }
     }
 }
 
-void configGoals(Goals *goals, GameState *gameState) {
+void config_goals(Goals *goals, GameState *game_state) {
   
+  if(goals->lenght != 0) {
+    free(goals->list);
+  }
+
   goals->lenght = 0;
   goals->list = NULL;
-  gameState->goals = goals;
+  game_state->goals = goals;
+
   
-  if(goals->list != NULL)
-    free(goals->list);
-  
-  for(int y = 0; y < gameState->currrentMap.height; y++) {
-    for(int x = 0; x < gameState->currrentMap.width; x++) {
-      if(gameState->currrentMap.field[y][x] == TARGET) {
+  for(int y = 0; y < game_state->current_map.height; y++) {
+    for(int x = 0; x < game_state->current_map.width; x++) {
+      if(game_state->current_map.field[y][x] == TARGET) {
         goals->lenght++;
         goals->list = (Object*) realloc(goals->list, goals->lenght * sizeof(Object));
         goals->list[goals->lenght - 1].redraw = true;
@@ -91,51 +91,52 @@ void configGoals(Goals *goals, GameState *gameState) {
   return;
 }
 
-void configGameState(GameState *gameState) {
-  gameState->win = false;
-  gameState->forceDraw = true;
-  gameState->time = time(0);
+void config_game_state(GameState *game_state) {
+  game_state->win = false;
+  game_state->force_draw = true;
+  game_state->time = time(0);
 }
 
-void nextLevel(GameState *gameState, SaveState *savestate, World *world) {
+void next_level(GameState *game_state, SaveState *save_state, World *world) {
   
-  savestate->level++;
+  save_state->level++;
 
-  if(world->levels[savestate->world].total - 1 < savestate->level) {
-    savestate->world++;
-    savestate->level = 0;
+  if(world->levels[save_state->world].total - 1 < save_state->level) {
+    save_state->world++;
+    save_state->level = 0;
   }
 
-  if(world->total <= savestate->world) {
-    drawWinMessage();
-    savestate->world = 0;
-    savestate->level = 0;
-    gameState->running = false;
+  if(world->total <= save_state->world) {
+    draw_win_message();
+    save_state->world = 0;
+    save_state->level = 0;
+    game_state->running = false;
   }
   else {
-    drawNextLevelMessage();
+    draw_next_level_message();
   }
   
-  defineSaveState(*savestate);
+  define_save_state(*save_state);
   
-  gameState->currrentMap = loadMap(world->levels[savestate->world].paths[savestate->level]);
+  destroy(&game_state->current_map, "Map");
   
-  configGameState(gameState);
-  configCharacter(gameState->character, gameState);
-  configBoxes(gameState->boxes, gameState);
-  configGoals(gameState->goals, gameState);
+  game_state->current_map = load_map(world->levels[save_state->world].paths[save_state->level]);
+  
+  config_game_state(game_state);
+  config_character(game_state->character, game_state);
+  config_boxes(game_state->boxes, game_state);
+  config_goals(game_state->goals, game_state);
 
 }
 
-void resetLevel(GameState *gameState, SaveState *savestate, World *world) {
+void reset_level(GameState *game_state, SaveState *save_state, World *world) {
   
-  gameState->currrentMap = loadMap(world->levels[savestate->world].paths[savestate->level]);
+  game_state->current_map = load_map(world->levels[save_state->world].paths[save_state->level]);
 
-  configGameState(gameState);
-  configCharacter(gameState->character, gameState);
-  configBoxes(gameState->boxes, gameState);
-  configGoals(gameState->goals, gameState);
-
+  config_game_state(game_state);
+  config_character(game_state->character, game_state);
+  config_boxes(game_state->boxes, game_state);
+  config_goals(game_state->goals, game_state);
 }
 
 #endif // __SETTING_SOKOBAN_H__

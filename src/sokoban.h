@@ -16,4 +16,6 @@
 #include "menu.h"
 #include "savestate.h"
 
+#define SAVE_STATE_PATH "save_state/"
+
 #endif // __SOKOBAN_SOKOBAN_H__

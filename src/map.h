@@ -7,17 +7,15 @@
 #include <dirent.h>
 #include "../lib/types.h"
 
+Map load_map(const char*);
+Map parse_file_map(Map);
+Levels load_levels(const char*);
+World load_worlds(const char*);
 
-Map loadMap(const char*);
-Map parseFilemap(Map);
-Levels loadLevels(const char*);
-World loadWorlds(const char*);
-
-
-Map loadMap(const char* filename) {
+Map load_map(const char* filename) {
   const int SIZE = 256;
   
-  Map map = {.width=0, .height=0, {.hasError=false, .size=0}};
+  Map map = {.width=0, .height=0, {.has_error=false, .size=0}};
 
   FILE *filemap = fopen(filename, "r");
   char buff[SIZE];
@@ -37,7 +35,7 @@ Map loadMap(const char* filename) {
       sprintf(messageInfo, "\033[31;1mError -> Map: %s, está com tamanho diferente na linha: %d\033[0;1m", filename, map.height);
 
      
-      map.errors.hasError = true;
+      map.errors.has_error = true;
       map.errors.size++;
       map.errors.list = (Error* ) realloc(map.errors.list, map.errors.size * sizeof(Error));
       map.errors.list[map.errors.size - 1].message = (char*) calloc(strlen(messageInfo), sizeof(char));
@@ -57,12 +55,11 @@ Map loadMap(const char* filename) {
   }
 
   fclose(filemap);
-  map = parseFilemap(map);
+  map = parse_file_map(map);
   return map;
 }
 
-
-Map parseFilemap(Map map) {
+Map parse_file_map(Map map) {
   for(int i = 0; i < map.height; i++) {
     for(int j = 0; j < map.width; j++) {
       if(map.field[i][j] == '.') {
@@ -74,10 +71,7 @@ Map parseFilemap(Map map) {
   return map;
 }
 
-
-
-
-Levels loadLevels(const char* dirname) {
+Levels load_levels(const char* dirname) {
   
   Levels levels = {.filenames=NULL, .paths=NULL, .total=0};
   struct dirent *list;
@@ -94,12 +88,14 @@ Levels loadLevels(const char* dirname) {
     if(!strcmp(list->d_name, "..") || !strcmp(list->d_name, "."))
       continue;
 
-    char *path = calloc(strlen(dirname) + strlen(list->d_name), sizeof(char));
+    char *path = (char*) calloc(strlen(dirname) + strlen(list->d_name), sizeof(char));
     strcat(path, dirname);
     strcat(path, list->d_name);
 
-    if(isdir(path))
+    if(isdir(path)) {
+      free(path);
       continue;
+    }
 
     free(path);
 
@@ -124,8 +120,7 @@ Levels loadLevels(const char* dirname) {
   return levels;
 }
 
-
-World loadWorlds(const char* dirname) {
+World load_worlds(const char* dirname) {
   
   World world = {.levels=NULL, .total=0};
   struct dirent *list;
@@ -140,15 +135,17 @@ World loadWorlds(const char* dirname) {
     
     Levels levels = {.filenames=NULL, .paths=NULL, .total=0};
 
-    char *path = calloc(strlen(dirname) + strlen(list->d_name) + 1, sizeof(char));
+    char *path = (char*) calloc(strlen(dirname) + strlen(list->d_name) + 1, sizeof(char));
     strcat(path, dirname);
     strcat(path, list->d_name);
     strcat(path, "/");
 
-    if(!isdir(path) || !strcmp(list->d_name, "..") || !strcmp(list->d_name, "."))
+    if(!isdir(path) || !strcmp(list->d_name, "..") || !strcmp(list->d_name, ".")) {
+      free(path);
       continue;
+    }
     
-    levels = loadLevels(path);
+    levels = load_levels(path);
    
 
     world.total++;
@@ -163,7 +160,5 @@ World loadWorlds(const char* dirname) {
   
   return world;
 }
-
-
 
 #endif // __MAP_SOKOBAN_H__

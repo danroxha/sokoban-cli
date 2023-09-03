@@ -4,17 +4,15 @@
 #include "../lib/types.h"
 #include "../lib/keyboard.h"
 
+void move_character(GameState*, Object*, int);
+void move_boxes(GameState*, Boxes*, Object*, int);
 
-void moveDoll(GameState*, Object*, int);
-void moveBoxes(GameState*, Boxes*, Object*, int);
-
-
-void moveDoll(GameState *gameState, Object *character, int key) {
+void move_character(GameState *gameState, Object *character, int key) {
   
-  bool collision_wall_top = gameState->currrentMap.field[character->y - 2][character->x - 1]    == WALL;
-  bool collision_wall_bottom = gameState->currrentMap.field[character->y][character->x - 1]     == WALL;
-  bool collision_wall_left = gameState->currrentMap.field[character->y - 1][character->x]       == WALL;
-  bool collision_wall_right = gameState->currrentMap.field[character->y - 1][character->x - 2]  == WALL;
+  bool collision_wall_top = gameState->current_map.field[character->y - 2][character->x - 1]    == WALL;
+  bool collision_wall_bottom = gameState->current_map.field[character->y][character->x - 1]     == WALL;
+  bool collision_wall_left = gameState->current_map.field[character->y - 1][character->x]       == WALL;
+  bool collision_wall_right = gameState->current_map.field[character->y - 1][character->x - 2]  == WALL;
   
   /*
     move doll
@@ -41,15 +39,14 @@ void moveDoll(GameState *gameState, Object *character, int key) {
   }
 }
 
-
-void moveBoxes(GameState *gameState, Boxes *boxes, Object *character, int key) {
+void move_boxes(GameState *gameState, Boxes *boxes, Object *character, int key) {
   
   for(int i = 0; i < boxes->lenght; i++) {
     
-    bool collision_wall_top    = gameState->currrentMap.field[boxes->list[i].y - 2][boxes->list[i].x - 1] == WALL;
-    bool collision_wall_bottom = gameState->currrentMap.field[boxes->list[i].y][boxes->list[i].x - 1]     == WALL;
-    bool collision_wall_left   = gameState->currrentMap.field[boxes->list[i].y - 1][boxes->list[i].x - 2] == WALL;
-    bool collision_wall_right  = gameState->currrentMap.field[boxes->list[i].y - 1][boxes->list[i].x]     == WALL;
+    bool collision_wall_top    = gameState->current_map.field[boxes->list[i].y - 2][boxes->list[i].x - 1] == WALL;
+    bool collision_wall_bottom = gameState->current_map.field[boxes->list[i].y][boxes->list[i].x - 1]     == WALL;
+    bool collision_wall_left   = gameState->current_map.field[boxes->list[i].y - 1][boxes->list[i].x - 2] == WALL;
+    bool collision_wall_right  = gameState->current_map.field[boxes->list[i].y - 1][boxes->list[i].x]     == WALL;
     
 
     bool collision_box = boxes->list[i].x == character->x && boxes->list[i].y == character->y;
@@ -127,6 +124,5 @@ void moveBoxes(GameState *gameState, Boxes *boxes, Object *character, int key) {
     }
   }
 }
-
 
 #endif
